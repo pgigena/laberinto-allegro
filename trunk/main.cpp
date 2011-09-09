@@ -45,6 +45,12 @@ bool doexit = false;
 bool key[4] = { false, false, false, false };
 bool mouse[3] = { false, false, false };
 
+// Personaje
+ALLEGRO_BITMAP *bouncer = NULL;
+// Paleta de personajes
+ALLEGRO_BITMAP *bmpChars = NULL;
+// Código del personaje activo
+int nActiveChar = 0;
 
 // Declaración de funciones
 // ------------------------------------------------
@@ -60,7 +66,7 @@ int main(int argc, char **argv)
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
-	ALLEGRO_BITMAP *bouncer = NULL;
+	
 	float bouncer_x = SCREEN_W / 2.0 - BOUNCER_SIZE / 2.0;
 	float bouncer_y = SCREEN_H / 2.0 - BOUNCER_SIZE / 2.0;
 
@@ -98,10 +104,16 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	// Cargo bitmap del personaje
-	char szPath[] = "char_test.png";
-	bouncer = al_load_bitmap(szPath);
-	/*bouncer = al_create_bitmap(BOUNCER_SIZE, BOUNCER_SIZE);*/
+	// Seteo el blender para que funcionen las transparencias
+	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
+
+	// Cargo bitmap de la paleta de personajes
+	char szPath[] = "chars_palette.png";
+	al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
+	bmpChars = al_load_bitmap(szPath);
+
+	// Creo el bitmap del personaje
+	bouncer = al_create_bitmap(BOUNCER_SIZE, BOUNCER_SIZE);
 	if(!bouncer) {
 		fprintf(stderr, "failed to create bouncer bitmap!\n");
 		al_destroy_display(display);
@@ -109,9 +121,9 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	//al_set_target_bitmap(bouncer);
-
-	//al_clear_to_color(al_map_rgb(0, 0, 255));
+	al_set_target_bitmap(bouncer);
+	al_clear_to_color(al_map_rgba(255, 255, 255, 0));
+	al_draw_bitmap_region(bmpChars, (30 * nActiveChar), 0, BOUNCER_SIZE, BOUNCER_SIZE, 0, 0, 0);
 
 	al_set_target_bitmap(al_get_backbuffer(display));
 
@@ -201,51 +213,10 @@ int main(int argc, char **argv)
 		else if(ev.type == ALLEGRO_EVENT_KEY_UP) {
 			onKeyUp(ev.keyboard);
 		}
-		/*else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
-		if (ev.mouse.button == 1) {
-		mouse[BTN_LEFT] = true;
-		} else if (ev.mouse.button == 2) {
-		mouse[BTN_RIGHT] = true;
-
-		bouncer_x = (SCREEN_W / 2) - (BOUNCER_SIZE / 2);
-		bouncer_y = (SCREEN_H / 2) - (BOUNCER_SIZE / 2);
-
-		redraw = true;
-
-		} 
-		} else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
-		if (ev.mouse.button == 1) {
-		mouse[BTN_LEFT] = false;
-		} else if (ev.mouse.button == 2) {
-		mouse[BTN_RIGHT] = false;
-		} else if (ev.mouse.button == 3) {
-		mouse[BTN_CENTER] = false;
-		}
-		} else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES ||
-		ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
-
-		if (mouse[BTN_LEFT]) {
-		bouncer_x = ev.mouse.x - (BOUNCER_SIZE / 2);
-		bouncer_y = ev.mouse.y - (BOUNCER_SIZE / 2);
-
-		if (bouncer_x <= 0) {
-		bouncer_x = 1;
-		} else if (bouncer_x + BOUNCER_SIZE >= SCREEN_W) {
-		bouncer_x = SCREEN_W - BOUNCER_SIZE;
-		}
-
-		if (bouncer_y <= 0) {
-		bouncer_y = 1;
-		} else if (bouncer_y + BOUNCER_SIZE >= SCREEN_H) {
-		bouncer_y = SCREEN_H - BOUNCER_SIZE;
-		}
-		}
-		}*/
 
 		if(redraw && al_is_event_queue_empty(event_queue)) {
 			redraw = false;
 			pintarMapa(display);
-			//al_clear_to_color(al_map_rgb(0,0,0));
 			al_draw_bitmap(bouncer, bouncer_x, bouncer_y, 0);
 			al_flip_display();
 		}
@@ -308,7 +279,8 @@ void onKeyDown(ALLEGRO_KEYBOARD_EVENT ev) {
 		case ALLEGRO_KEY_RIGHT:
 			key[KEY_RIGHT] = true;
 			break;
-		}	
+		}
+
 }
 
 
@@ -354,6 +326,19 @@ void onKeyUp(ALLEGRO_KEYBOARD_EVENT ev) {
 			printf(szMensaje);
 
 			strcpy(szMensaje, "");*/
+			break;
+		case ALLEGRO_KEY_SPACE:
+			if (nActiveChar < 3) {
+				nActiveChar++;
+			} else {
+				nActiveChar = 0;
+			}
+			al_destroy_bitmap(bouncer);
+			bouncer = al_create_bitmap(BOUNCER_SIZE, BOUNCER_SIZE);
+			al_set_target_bitmap(bouncer);
+			al_clear_to_color(al_map_rgba(255, 255, 255, 0));
+			al_draw_bitmap_region(bmpChars, (30 * nActiveChar), 0, BOUNCER_SIZE, BOUNCER_SIZE, 0, 0, 0);
+
 			break;
 		case ALLEGRO_KEY_ESCAPE:
 			doexit = true;
