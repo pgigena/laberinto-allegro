@@ -21,7 +21,10 @@ enum MOUSE_BUTTONS {
 };
 
 // Mapa
-const int MAPA [10][10] = {
+const int MAP_W = 10;
+const int MAP_H = 10;
+
+const int MAPA [MAP_W][MAP_H] = {
 	{1,1,1,1,1,0,1,1,1,1},
 	{0,0,0,1,0,0,0,1,2,1},
 	{0,1,0,0,0,1,0,0,0,1},
@@ -45,16 +48,22 @@ bool doexit = false;
 bool key[4] = { false, false, false, false };
 bool mouse[3] = { false, false, false };
 
+// Posición del personaje (En tiles)
+int posTilesX = 0;
+int posTilesY = 0;
+
 // Personaje
 ALLEGRO_BITMAP *bouncer = NULL;
 // Paleta de personajes
 ALLEGRO_BITMAP *bmpChars = NULL;
 // Código del personaje activo
-int nActiveChar = 0;
+int nActiveChar = 1;
 
 // Declaración de funciones
 // ------------------------------------------------
 void pintarMapa(ALLEGRO_DISPLAY *display);
+void moverPersonajePredictivo();
+void moverPersonajeCorrectivo();
 void onKeyDown(ALLEGRO_KEYBOARD_EVENT ev);
 void onKeyUp(ALLEGRO_KEYBOARD_EVENT ev);
 
@@ -66,9 +75,6 @@ int main(int argc, char **argv)
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
-	
-	float bouncer_x = SCREEN_W / 2.0 - BOUNCER_SIZE / 2.0;
-	float bouncer_y = SCREEN_H / 2.0 - BOUNCER_SIZE / 2.0;
 
 	if(!al_init()) {
 		fprintf(stderr, "failed to initialize allegro!\n");
@@ -154,19 +160,14 @@ int main(int argc, char **argv)
 	int i=0;
 	int a=0;
 	int b=0;
-	int pos_m = 0; //columnas
-	int pos_n = 0; //filas
 
 	for(i=0; (i < 10 && b==0); i++){
 		std::cout << "\n";
 		for(a=0; (a<10 && b==0); a++){
 			std::cout << MAPA[i][a] << " ";
 			if(MAPA[i][a] == 2){
-				bouncer_x = ((a)*30);
-				bouncer_y = ((i)*30);
-				pos_m = a;
-				pos_n = i;
-
+				posTilesX = a;
+				posTilesY = i;
 				//b=1;
 			}
 		}
@@ -178,31 +179,8 @@ int main(int argc, char **argv)
 		al_wait_for_event(event_queue, &ev);
 		
 		if(ev.type == ALLEGRO_EVENT_TIMER) {
-			pos_m = bouncer_x / 30;
-			pos_n = bouncer_y / 30;
-
-			if(key[KEY_UP] && pos_n-1 >= 0 && MAPA[pos_n-1][pos_m] != 1 && bouncer_y >= 30 ) {
-				bouncer_y -= 30;
-				pos_n = bouncer_y / 30;
-			}
-
-			if(key[KEY_DOWN] && pos_n+1 <= 10 && MAPA[pos_n+1][pos_m] != 1 && bouncer_y <= SCREEN_H - BOUNCER_SIZE - 30 ) {
-				bouncer_y += 30;
-				pos_n = bouncer_y / 30;
-			}
-
-			if(key[KEY_LEFT] && pos_m-1 >= 0 && MAPA[pos_n][pos_m-1] != 1 && bouncer_x >= 30) {
-				bouncer_x -= 30;
-				pos_m = bouncer_x / 30;
-			}
-
-			if(key[KEY_RIGHT] && pos_m+1 <= 10 && MAPA[pos_n][pos_m+1] != 1 && bouncer_x <= SCREEN_W - BOUNCER_SIZE - 30) {
-				bouncer_x += 30;
-				pos_m = bouncer_x / 30;
-			}
-
-
-			redraw = true;
+			//moverPersonajePredictivo();
+			moverPersonajeCorrectivo();
 		}
 		else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			break;
@@ -217,7 +195,7 @@ int main(int argc, char **argv)
 		if(redraw && al_is_event_queue_empty(event_queue)) {
 			redraw = false;
 			pintarMapa(display);
-			al_draw_bitmap(bouncer, bouncer_x, bouncer_y, 0);
+			al_draw_bitmap(bouncer, (posTilesX * 30), (posTilesY * 30), 0);
 			al_flip_display();
 		}
 	}
@@ -259,6 +237,77 @@ void pintarMapa(ALLEGRO_DISPLAY *display) {
 	}
 }
 
+// moverPersonajePredictivo
+// ------------------------------------------------
+void moverPersonajePredictivo() {
+
+	if(key[KEY_UP] && posTilesY - 1 >= 0 && MAPA[posTilesY-1][posTilesX] != 1) {
+		posTilesY--;
+	}
+
+	if(key[KEY_DOWN] && posTilesY + 1 < MAP_H && MAPA[posTilesY+1][posTilesX] != 1) {
+		posTilesY++;
+	}
+
+	if(key[KEY_LEFT] && posTilesX - 1 >= 0 && MAPA[posTilesY][posTilesX-1] != 1) {
+		posTilesX--;
+	}
+
+	if(key[KEY_RIGHT] && posTilesX + 1 < MAP_W && MAPA[posTilesY][posTilesX+1] != 1) {
+		posTilesX++;
+	}
+
+
+	redraw = true;
+}
+
+// moverPersonajeCorrectivo
+// ------------------------------------------------
+void moverPersonajeCorrectivo() {
+	int nXPreliminar = posTilesX;
+	int nYPreliminar = posTilesY;
+	bool bMoved = false;
+
+	if (key[KEY_UP] && posTilesY - 1 >= 0) {
+		nYPreliminar = posTilesY - 1;
+		bMoved = true;
+	}
+
+	if (key[KEY_DOWN] && posTilesY + 1 < MAP_H) {
+		nYPreliminar = posTilesY + 1;
+		bMoved = true;
+	}
+
+	if (key[KEY_LEFT]  && posTilesX - 1 >= 0) {
+		nXPreliminar = posTilesX - 1;
+		bMoved = true;
+	}
+
+	if (key[KEY_RIGHT] && posTilesX + 1 < MAP_W) {
+		nXPreliminar = posTilesX + 1;
+		bMoved = true;
+	}
+
+	if (bMoved) {
+		int nPosPreliminar = MAPA[nYPreliminar][nXPreliminar];
+		/*
+		std::cout << "_____________________" << endl;
+		std::cout << "ACTUAL X: " << posTilesX << endl;
+		std::cout << "ACTUAL Y: " << posTilesY << endl;
+		std::cout << "TILE ACTUAL: " << MAPA[posTilesX][posTilesY] << endl;
+		std::cout << "PRELIMINAR X: " << nXPreliminar << endl;
+		std::cout << "PRELIMINAR Y: " << nYPreliminar << endl;
+		std::cout << "TILE PRELIMINAR: " << nPosPreliminar << endl;
+		*/
+
+		if (nPosPreliminar != 1) {
+			posTilesX = nXPreliminar;
+			posTilesY = nYPreliminar;
+
+			redraw = true;
+		}
+	}
+}
 
 // onKeyDown
 // ------------------------------------------------
@@ -308,18 +357,18 @@ void onKeyUp(ALLEGRO_KEYBOARD_EVENT ev) {
 			break;
 		case ALLEGRO_KEY_ENTER:
 				
-			/*std::cout << "pos x: "<< pos_m << " pos y: " << pos_n << " valor actual: "<< MAPA[pos_m][pos_n] <<endl
-				<< "\tvalor del que esta arriba: " << MAPA[pos_n-1][pos_m]<< endl
-				<< "\tvalor del que esta abajo: " << MAPA[pos_n+1][pos_m]<< endl
-				<< "\tvalor del que esta derecha: " << MAPA[pos_n][pos_m+1]<< endl
-				<< "\tvalor del que esta izquierda: " << MAPA[pos_n][pos_m-1]<< endl
+			/*std::cout << "pos x: "<< posTilesX << " pos y: " << posTilesY << " valor actual: "<< MAPA[posTilesX][posTilesY] <<endl
+				<< "\tvalor del que esta arriba: " << MAPA[posTilesY-1][posTilesX]<< endl
+				<< "\tvalor del que esta abajo: " << MAPA[posTilesY+1][posTilesX]<< endl
+				<< "\tvalor del que esta derecha: " << MAPA[posTilesY][posTilesX+1]<< endl
+				<< "\tvalor del que esta izquierda: " << MAPA[posTilesY][posTilesX-1]<< endl
 			<<endl;*/
 			/*strcat(szMensaje, "X=");
-			_itoa(pos_m, szBufferCoordenada, 10);
+			_itoa(posTilesX, szBufferCoordenada, 10);
 			strcat(szMensaje, szBufferCoordenada);
 
 			strcat(szMensaje, "|Y=");
-			_itoa(pos_n, szBufferCoordenada, 10);
+			_itoa(posTilesY, szBufferCoordenada, 10);
 			strcat(szMensaje, szBufferCoordenada);
 			strcat(szMensaje, "\n");
 
@@ -338,6 +387,8 @@ void onKeyUp(ALLEGRO_KEYBOARD_EVENT ev) {
 			al_set_target_bitmap(bouncer);
 			al_clear_to_color(al_map_rgba(255, 255, 255, 0));
 			al_draw_bitmap_region(bmpChars, (30 * nActiveChar), 0, BOUNCER_SIZE, BOUNCER_SIZE, 0, 0, 0);
+
+			redraw = true;
 
 			break;
 		case ALLEGRO_KEY_ESCAPE:
