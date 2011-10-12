@@ -10,11 +10,11 @@ class CTile
 public:
 	// Agregar ide
 	CTile(int nTileIndex);
-	CTile(void);
+	//CTile(void);
 	~CTile(void);
 
 	ALLEGRO_BITMAP * getTileImage();
-	bool getWalkable();
+	//bool getWalkable();
 	void setTileImage(ALLEGRO_BITMAP *bmpTileImg);
 	int getTileIndex();
 
