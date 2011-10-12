@@ -5,7 +5,7 @@
 #include "Resource.h"
 
 // TODO: Definir si la clave del mapa va a ser un entero
-typedef map<int, CResource> MapRes;
+typedef map<int, CResource*> MapRes;
 
 class CResourceStack
 {
@@ -13,6 +13,7 @@ public:
 	CResourceStack(void);
 	~CResourceStack(void);
 
+	CResource * getResource(int nResId);
 private:
 	MapRes m_mRecursos;
 };
