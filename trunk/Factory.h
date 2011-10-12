@@ -16,7 +16,7 @@ public:
 	static CResBitmap * CreateBitmap(string sPath);
 
 	// TileMap
-	static CTileMap * CreateTileMap(int nWidth, int nHeight);
+	static CTileMap * CreateTileMap(int nWidth, int nHeight, int nTileWidh, int nTileHeight);
 };
 
 #endif // FACTORY_H

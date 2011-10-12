@@ -17,11 +17,10 @@ CResBitmap * CFactory::CreateBitmap()
 
 CResBitmap * CFactory::CreateBitmap(string sPath)
 {
-	CResBitmap *c = new CResBitmap();
-	return c;
+	return new CResBitmap();
 }
 
-CTileMap * CFactory::CreateTileMap(int nWidth, int nHeight)
+CTileMap * CFactory::CreateTileMap(int nWidth, int nHeight, int nTileWidth, int nTileHeight)
 {
-	return NULL;
+	return new CTileMap(nWidth, nHeight, nTileWidth, nTileHeight);
 }
