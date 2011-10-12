@@ -3,14 +3,16 @@
 
 CTile::CTile(int nTileIndex)
 {
+	m_nTileIndex = nTileIndex;
 }
 
-CTile::CTile(void)
+/*CTile::CTile(void)
 {
-}
+}*/
 
 CTile::~CTile(void)
 {
+	// TODO: Destruyo el bitmap de acá o le pido al ResourceStack que lo haga?
 }
 
 int CTile::getTileIndex()
