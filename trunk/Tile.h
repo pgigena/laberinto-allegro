@@ -1,16 +1,22 @@
+#ifndef TILE_H
+#define TILE_H
+
+#pragma once
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 
-#pragma once
 class CTile
 {
 public:
 	// Agregar ide
-	CTile(int nTileIndex, ALLEGRO_BITMAP *bmpTileImage);
+	CTile(int nTileIndex);
+	CTile(void);
 	~CTile(void);
 
 	ALLEGRO_BITMAP * getTileImage();
 	bool getWalkable();
+	void setTileImage(ALLEGRO_BITMAP *bmpTileImg);
+	int getTileIndex();
 
 private:
 	// Código que representa además del indice si es pisable o no
@@ -21,3 +27,4 @@ private:
 	// No tiene que tener un Width y un Height?
 };
 
+#endif // TILE_H
