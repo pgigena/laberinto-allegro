@@ -21,6 +21,11 @@ typedef struct TileCoord
 			return true;
 		}
 		else {
+			if (x == tc.x && y < tc.y) {
+				return true;
+			} else if (y == tc.y && x < tc.x) {
+				return true;
+			}
 			return false;
 		}
     }
