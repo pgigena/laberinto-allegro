@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 	int tileW = 15;
 	int tileH = 15;
 
-	CTileMap *tmMap = CFactory::CreateTileMap(10, 10, tileW, tileH);
+	CTileMap *tmMap = CFactory::createTileMap(3, 3, tileW, tileH);
 
 	bool redraw = true;
  
@@ -35,6 +35,11 @@ int main(int argc, char **argv)
 		return -1;
 	}
  
+	if(!al_install_keyboard()) {
+		fprintf(stderr, "failed to initialize the keyboard!\n");
+		return -1;
+	}
+
 	timer = al_create_timer(1.0 / FPS);
 	if(!timer) {
 		fprintf(stderr, "failed to create timer!\n");
@@ -63,6 +68,7 @@ int main(int argc, char **argv)
 	al_register_event_source(event_queue, al_get_display_event_source(display));
  	al_register_event_source(event_queue, al_get_timer_event_source(timer));
  	al_register_event_source(event_queue, al_get_mouse_event_source());
+	al_register_event_source(event_queue, al_get_keyboard_event_source());
  
 	al_clear_to_color(al_map_rgb(0,0,0));
  	al_flip_display();
@@ -88,6 +94,13 @@ int main(int argc, char **argv)
 				break;
 			}*/
 			break;
+		} else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+			switch (ev.keyboard.keycode)
+			{
+				case ALLEGRO_KEY_P:
+					system("pause");
+					break;
+			}
 		}
  
 		if(redraw && al_is_event_queue_empty(event_queue)) {
