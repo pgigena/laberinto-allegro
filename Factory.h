@@ -12,11 +12,14 @@ public:
 	~CFactory(void);
 
 	// Bitmap
-	static CResBitmap * CreateBitmap();
-	static CResBitmap * CreateBitmap(string sPath);
+	static CResBitmap * createBitmap();
+	static CResBitmap * createBitmap(string sPath);
 
 	// TileMap
-	static CTileMap * CreateTileMap(int nWidth, int nHeight, int nTileWidh, int nTileHeight);
+	static CTileMap * createTileMap(int nWidth, int nHeight, int nTileWidh, int nTileHeight);
+
+	// Tile
+	static CTile * createTile(int nIndex);
 };
 
 #endif // FACTORY_H

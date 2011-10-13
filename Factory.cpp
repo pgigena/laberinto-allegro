@@ -10,17 +10,22 @@ CFactory::~CFactory(void)
 {
 }
 
-CResBitmap * CFactory::CreateBitmap()
+CResBitmap * CFactory::createBitmap()
 {
-	return CFactory::CreateBitmap(NULL);
+	return CFactory::createBitmap(NULL);
 }
 
-CResBitmap * CFactory::CreateBitmap(string sPath)
+CResBitmap * CFactory::createBitmap(string sPath)
 {
 	return new CResBitmap();
 }
 
-CTileMap * CFactory::CreateTileMap(int nWidth, int nHeight, int nTileWidth, int nTileHeight)
+CTileMap * CFactory::createTileMap(int nWidth, int nHeight, int nTileWidth, int nTileHeight)
 {
 	return new CTileMap(nWidth, nHeight, nTileWidth, nTileHeight);
+}
+
+CTile * CFactory::createTile(int nIndex)
+{
+	return new CTile(nIndex);
 }
