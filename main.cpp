@@ -6,9 +6,6 @@
 // Main
 // ----------------------------------------------------------------------------
 const float FPS = 1;
-const int SCREEN_W = 640;
-const int SCREEN_H = 480;
-const int BOUNCER_SIZE = 32;
  
 int main(int argc, char **argv)
 {
@@ -18,12 +15,20 @@ int main(int argc, char **argv)
 	ALLEGRO_BITMAP *bmpMesh = NULL;
 	ALLEGRO_COLOR color;
 	int nColor = 0;
-	int tileW = 15;
-	int tileH = 15;
 
-	CTileMap *tmMap = CFactory::createTileMap(3, 3, tileW, tileH);
+	int nMapWidth = 10;
+	int nMapHeight = 10;
 
-	bool redraw = true;
+	int nTileWidth = 15;
+	int nTileHeight = 15;
+
+	int nScreenWidth = nMapWidth * nTileWidth;
+	int nScreenHeight = nMapHeight * nTileHeight;
+
+	CTileMap *tmMap = CFactory::createTileMap(nMapWidth, nMapHeight, nTileWidth, nTileHeight);
+
+	bool bRedraw = true;
+	bool bExit = false;
  
 	if(!al_init()) {
 		fprintf(stderr, "failed to initialize allegro!\n");
@@ -46,7 +51,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
  
-	display = al_create_display(SCREEN_W, SCREEN_H);
+	display = al_create_display(nScreenWidth, nScreenHeight);
 	if(!display) {
 		fprintf(stderr, "failed to create display!\n");
 		al_destroy_timer(timer);
@@ -75,38 +80,33 @@ int main(int argc, char **argv)
 
 	al_start_timer(timer);
  
-	while(true)
+	while(!bExit)
 	{
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
  
 		if(ev.type == ALLEGRO_EVENT_TIMER) {
-			redraw = true;
+			bRedraw = true;
 		}
 		else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-			break;
+			bExit = true;
 		}
 		else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
-			/*if (ev.mouse.button == 1) {
-				system("pause");
-			}
-			else {
-				break;
-			}*/
-			break;
+			bExit = true;
 		} else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
 			switch (ev.keyboard.keycode)
 			{
 				case ALLEGRO_KEY_P:
 					system("pause");
 					break;
+				case ALLEGRO_KEY_ESCAPE:
+					bExit = true;
 			}
 		}
  
-		if(redraw && al_is_event_queue_empty(event_queue)) {
-			redraw = false;
+		if(bRedraw && al_is_event_queue_empty(event_queue)) {
+			bRedraw = false;
  
-			//al_clear_to_color(al_map_rgb(0,0,0));
 			tmMap->paintMap(display);
 			al_flip_display();
 		}
@@ -115,6 +115,8 @@ int main(int argc, char **argv)
 	al_destroy_timer(timer);
 	al_destroy_display(display);
 	al_destroy_event_queue(event_queue);
+
+	delete tmMap;
 
 	return 0;
 }

@@ -2,6 +2,7 @@
 #define UTIL_H
 
 #include <map>
+#include <unordered_map>
 #include <iostream>
 #include <string>
 
@@ -15,21 +16,27 @@ typedef struct TileCoord
 	int x;
 	int y;
 
-	bool operator < (const TileCoord& tc) const
+	bool operator == (const TileCoord & tc) const
     {
-        if (x < tc.x && y < tc.y) {
+        if (x == tc.x && y == tc.y) {
 			return true;
 		}
-		else {
-			if (x == tc.x && y < tc.y) {
-				return true;
-			} else if (y == tc.y && x < tc.x) {
-				return true;
-			}
-			return false;
-		}
-    }
 
+		return false;
+		
+    }
 } TileCoord;
+
+class TileCoordHash{
+
+public:
+    long operator()(const TileCoord &tc) const{
+		string s = "";
+		s += tc.x;
+		s += tc.y;
+
+		return atoi(s.c_str());
+    }
+};
 
 #endif // UTIL_H
