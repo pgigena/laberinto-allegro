@@ -4,7 +4,7 @@
 #include "Util.h"
 #include "Tile.h"
 
-typedef map<TileCoord, CTile*> TileGrid;
+typedef unordered_map<TileCoord, CTile*, TileCoordHash> TileGrid;
 
 class CTileMap
 {

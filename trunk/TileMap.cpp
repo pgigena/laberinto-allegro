@@ -26,29 +26,15 @@ CTileMap::CTileMap(int nWidth, int nHeight, int nTileWidth, int nTileHeight)
 				bGreenTile = true;
 			}
 
-			cout << "TileX=" << tc.x << '\t';
-			cout << "TileY=" << tc.y << '\t' << endl;
-			cout << "Tile Index=" << nTileType << endl;
-
 			m_mMap.insert(TileGrid::value_type(tc, CFactory::createTile(nTileType)));
-			//m_mMap.insert(TileGrid::value_type(tc, new CTile(nTileType)));
-			cout << "TileIdxReal=" << m_mMap[tc]->getTileIndex() << endl;
-			cout << "_____________" << endl;
+			//cout << "Ref[" << tc.x << "," << tc.y << "]=" << &m_mMap[tc] << endl;
 		}
-	}
-
-	for (int x = 0; x < m_nWidth; x++)
-	{
-		tc.x = x;
-		for (int y = 0; y < m_nHeight; y++)
-		{
-			tc.y = y;
-
-			cout << "TileX=" << tc.x << '\t';
-			cout << "TileY=" << tc.y << '\t';
-			cout << "Tile Index=" << m_mMap[tc]->getTileIndex() << endl;
-			cout << "Ref=" << &m_mMap[tc] << endl;
-			cout << "_____________" << endl;
+		if (bGreenTile) {
+			nTileType = 1;
+			bGreenTile = false;
+		} else {
+			nTileType = 0;
+			bGreenTile = true;
 		}
 	}
 }
@@ -70,10 +56,19 @@ CTileMap::~CTileMap(void)
 
 void CTileMap::paintMap(ALLEGRO_DISPLAY *display)
 {
-	ALLEGRO_BITMAP *bmpMesh = NULL;
-	ALLEGRO_COLOR colTileColor = al_map_rgb(0, 255, 0);
+	ALLEGRO_BITMAP *bmpGreenMesh = NULL;
+	ALLEGRO_BITMAP *bmpBlueMesh = NULL;
 	TileCoord tc;
-	bool bIsGreen = false;
+
+	bmpGreenMesh = al_create_bitmap(m_nTileWidth, m_nTileHeight);
+	al_set_target_bitmap(bmpGreenMesh);
+	al_clear_to_color(al_map_rgb(0, 255, 0));
+
+	bmpBlueMesh = al_create_bitmap(m_nTileWidth, m_nTileHeight);
+	al_set_target_bitmap(bmpBlueMesh);
+	al_clear_to_color(al_map_rgb(0, 0, 255));
+
+	al_set_target_bitmap(al_get_backbuffer(display));
 
 	for (int y = 0; y < m_nWidth; y++)
 	{
@@ -83,28 +78,11 @@ void CTileMap::paintMap(ALLEGRO_DISPLAY *display)
 		{
 			tc.x = x;
 
-			if (bmpMesh != NULL) {
-				al_destroy_bitmap(bmpMesh);
-			}
-
-			bmpMesh = al_create_bitmap(m_nTileWidth, m_nTileHeight);
-			al_set_target_bitmap(bmpMesh);
-
-			/*cout << "TileX=" << tc.x << '\t';
-			cout << "TileY=" << tc.y << '\t';
-			cout << "Tile Index=" << m_mMap[tc]->getTileIndex() << endl;
-			cout << "_____________" << endl;*/
-
 			if (m_mMap[tc]->getTileIndex() == 1) {
-				colTileColor = al_map_rgb(0, 255, 0);
+				al_draw_bitmap(bmpGreenMesh, (x * m_nTileWidth), (y * m_nTileHeight), 0);
 			} else {
-				colTileColor = al_map_rgb(0, 0, 255);
+				al_draw_bitmap(bmpBlueMesh, (x * m_nTileWidth), (y * m_nTileHeight), 0);
 			}
-
-			al_clear_to_color(colTileColor);
-
-			al_set_target_bitmap(al_get_backbuffer(display));
-			al_draw_bitmap(bmpMesh, (x * m_nTileWidth), (y * m_nTileHeight), 0);
 		}
 	}
 }
