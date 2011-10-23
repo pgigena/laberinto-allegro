@@ -11,6 +11,8 @@ using namespace std;
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_image.h>
 
+#include "TinyXML\tinyxml.h"
+
 typedef struct TileCoord
 {
 	int x;

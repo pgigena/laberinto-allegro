@@ -16,7 +16,8 @@ public:
 	static CResBitmap * createBitmap(string sPath);
 
 	// TileMap
-	static CTileMap * createTileMap(int nWidth, int nHeight, int nTileWidh, int nTileHeight);
+	//static CTileMap * createTileMap(int nWidth, int nHeight, int nTileWidh, int nTileHeight);
+	static CTileMap * createTileMap();
 
 	// Tile
 	static CTile * createTile(int nIndex);
