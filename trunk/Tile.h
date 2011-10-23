@@ -2,8 +2,9 @@
 #define TILE_H
 
 #pragma once
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
+#include "Util.h"
+//#include <allegro5/allegro.h>
+//#include <allegro5/allegro_image.h>
 
 class CTile
 {
