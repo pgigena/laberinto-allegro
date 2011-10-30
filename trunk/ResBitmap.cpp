@@ -1,10 +1,13 @@
 #include "ResBitmap.h"
 
+CResBitmap::CResBitmap(string sPath)
+{
+	m_sPath = sPath;
+}
 
 CResBitmap::CResBitmap()
 {
 }
-
 
 CResBitmap::~CResBitmap()
 {

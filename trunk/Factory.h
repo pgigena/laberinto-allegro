@@ -3,6 +3,9 @@
 
 #include "Util.h"
 #include "ResBitmap.h"
+#include "TilesetImg.h"
+#include "Tileset.h"
+#include "Layer.h"
 #include "TileMap.h" 
 
 class CFactory
@@ -16,8 +19,16 @@ public:
 	static CResBitmap * createBitmap(string sPath);
 
 	// TileMap
-	//static CTileMap * createTileMap(int nWidth, int nHeight, int nTileWidh, int nTileHeight);
 	static CTileMap * createTileMap();
+
+	// Tileset
+	static CTileset * createTileset();
+	
+	// SpritePalette
+	static CTilesetImg * createTilesetImg(int nSpriteW, int nSpriteH);
+
+	// Layer
+	static CLayer * createLayer();
 
 	// Tile
 	static CTile * createTile(int nIndex);
