@@ -27,6 +27,21 @@ CTileMap * CFactory::createTileMap()
 	return new CTileMap();
 }
 
+CTileset * CFactory::createTileset()
+{
+	return new CTileset();
+}
+
+CTilesetImg * CFactory::createTilesetImg(int nSpriteW, int nSpriteH)
+{
+	return new CTilesetImg(nSpriteW, nSpriteH);
+}
+
+CLayer * CFactory::createLayer()
+{
+	return new CLayer();
+}
+
 CTile * CFactory::createTile(int nIndex)
 {
 	return new CTile(nIndex);

@@ -28,9 +28,9 @@ int main(int argc, char **argv)
 	CTileMap *tmMap = NULL;
 
 	tmMap = CFactory::createTileMap();
-
+	//tmMap->setTmxFile(new TiXmlDocument("test.tmx"));*/
 	if (!argv[1]) {
-		tmMap->setTmxFile(new TiXmlDocument("test.tmx"));
+		tmMap->setTmxFile(new TiXmlDocument("large.tmx"));
 	} else {
 		tmMap->setTmxFile(new TiXmlDocument(argv[1]));
 	}
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 		if(bRedraw && al_is_event_queue_empty(event_queue)) {
 			bRedraw = false;
  
-			tmMap->paintMap(display);
+			tmMap->paint(display);
 			al_flip_display();
 		}
 	}

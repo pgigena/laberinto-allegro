@@ -1,10 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
 
-#pragma once
 #include "Util.h"
-//#include <allegro5/allegro.h>
-//#include <allegro5/allegro_image.h>
 
 class CTile
 {
@@ -27,5 +24,7 @@ private:
 
 	// No tiene que tener un Width y un Height?
 };
+
+typedef unordered_map<TileCoord, CTile*, TileCoordHash> TileGrid;
 
 #endif // TILE_H

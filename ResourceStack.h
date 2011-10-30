@@ -4,18 +4,22 @@
 #include "Util.h"
 #include "Resource.h"
 
-// TODO: Definir si la clave del mapa va a ser un entero
-typedef map<int, CResource*> MapRes;
+// TODO: Definir si la clave del mapa va a ser un string
+typedef map<string, CResource*> ResMap;
 
+// TODO: Definir si el ResourceStack va a ser estático
 class CResourceStack
 {
 public:
 	CResourceStack(void);
 	~CResourceStack(void);
 
-	CResource * getResource(int nResId);
+	CResource * getResource(string sResId);
+
+	void addResource(string sResId, CResource *rcRes);
+
 private:
-	MapRes m_mRecursos;
+	ResMap m_mapResources;
 };
 
 #endif // RESOURCE_STACK_H

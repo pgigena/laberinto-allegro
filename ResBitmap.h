@@ -9,6 +9,7 @@ class CResBitmap :
 {
 
 public:
+	CResBitmap(string sPath);
 	CResBitmap();
 	~CResBitmap();
 

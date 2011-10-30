@@ -8,7 +8,12 @@ CResourceStack::~CResourceStack(void)
 {
 }
 
-CResource * CResourceStack::getResource(int nResId)
+void CResourceStack::addResource(string sResId, CResource *rcRes)
 {
-	return m_mRecursos[nResId];
+	m_mapResources.insert(ResMap::value_type(sResId, rcRes));
+}
+
+CResource * CResourceStack::getResource(string sResId)
+{
+	return m_mapResources[sResId];
 }
