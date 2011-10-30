@@ -46,19 +46,17 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 	ALLEGRO_BITMAP *bmpMesh = NULL;
 	int nTileIndex;
 	int nRowSize;
-	int nTranspColor;
+//	int nTranspColor;
 	int nTileRow, nTileCol;
 	int nTileW, nTileH;
+	int nMargin, nTileSpacing;
+	int nFirstGId;
 
 	al_set_target_bitmap(al_get_backbuffer(display));
 	
 	for (LayerVector::iterator itLayer = m_vLayers.begin(); itLayer != m_vLayers.end(); ++itLayer) {
 		lyrCurrentLayer = (*itLayer);
 		tgTiles = lyrCurrentLayer->getTileGrid();
-
-		cout << "____________" << endl;
-		cout << "Layer=" << lyrCurrentLayer->getName() << endl;
-
 		for (int x = 0; x < lyrCurrentLayer->getWidth(); x++)
 		{
 			tc.x = x;
@@ -66,58 +64,44 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 			for (int y = 0; y < lyrCurrentLayer->getHeight(); y++)
 			{
 				tc.y = y;
+
+				// If the coordinate has no elements, skip to the next
+				if (tgTiles->find(tc) == tgTiles->end()) {
+					continue;
+				}
+
 				nTileIndex = tgTiles->at(tc)->getTileIndex();
 
 				for (TilesetVector::reverse_iterator itTileset = m_vTilesets.rbegin(); itTileset != m_vTilesets.rend(); ++itTileset)
 				{
 					tlsCurrentTileset = (*itTileset);
 					if (nTileIndex >= tlsCurrentTileset->getFirstGId()) {
+						nFirstGId = tlsCurrentTileset->getFirstGId();
 
 						tliPalette = tlsCurrentTileset->getTilePalette();
 						nRowSize = tliPalette->getRowSize();
 
-						nTileRow = (nTileIndex - tlsCurrentTileset->getFirstGId()) / nRowSize;
-						nTileCol = (nTileIndex - tlsCurrentTileset->getFirstGId()) % nRowSize;
+						nTileRow = (nTileIndex - nFirstGId) / nRowSize;
+						nTileCol = (nTileIndex - nFirstGId) % nRowSize;
 
 						nTileW = tlsCurrentTileset->getTileW();
 						nTileH = tlsCurrentTileset->getTileH();
 
-						nTranspColor = tlsCurrentTileset->getTilePalette()->getTransparentColor();
+						nTileSpacing = tlsCurrentTileset->getSpacing();
+						nMargin = tlsCurrentTileset->getMargin();
+						//nTranspColor = tlsCurrentTileset->getTilePalette()->getTransparentColor();
 
 						//bmpMesh = tliPalette->getImage()->getResource();
 						bmpMesh = tliPalette->getImage();
 
-						/*cout << "Tile[" << x << "][" << y << "]=" << nTileIndex << endl;
-						cout << "Pertenece a " << tlsCurrentTileset->getName() << endl;
-						cout << "PalCoords=" << nTileRow << ", " << nTileCol << endl;*/
-
-						/*if (nTranspColor != -1) {
-							al_set
-						} else {*/
-						al_draw_bitmap_region(bmpMesh, (nTileW * nTileCol), (nTileH * nTileRow), nTileW, nTileH,
+						al_draw_bitmap_region(bmpMesh, ((nTileW + nTileSpacing)* nTileCol) + nMargin, ((nTileH + nTileSpacing) * nTileRow) + nMargin, nTileW, nTileH,
 									(m_nTileWidth * x), (m_nTileHeight * y), 0);
 						break;
-						//}
-						//cout << "pintado[" << tc.x << "][" << tc.y << "]" << endl;
 					}
 				}
 			}
 		}
 	}
-
-	/*for (int y = 0; y < m_nHeight; y++)
-	{
-		tc.y = y;
-
-		for (int x = 0; x < m_nWidth; x++)
-		{
-			tc.x = x;
-			//nSpriteIndex = m_mMap[tc]->getTileIndex() - 1;
-			
-
-			al_draw_bitmap_region(m_bmpSpritePalette, (m_nTileWidth * nSpriteIndex), (m_nTileHeight * 0), m_nTileWidth, m_nTileHeight, (m_nTileWidth * x), (m_nTileHeight * y), 0);
-		}
-	}*/
 }
 
 int CTileMap::initialize()

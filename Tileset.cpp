@@ -3,6 +3,8 @@
 
 CTileset::CTileset(void)
 {
+	m_nSpacing = 0;
+	m_nMargin = 0;
 }
 
 
@@ -25,6 +27,16 @@ int CTileset::getTileH()
 	return m_nTileH;
 }
 
+int CTileset::getMargin()
+{
+	return m_nMargin;
+}
+
+int CTileset::getSpacing()
+{
+	return m_nSpacing;
+}
+
 string CTileset::getName()
 {
 	return m_sName;
@@ -39,11 +51,24 @@ int CTileset::initialize(TiXmlNode *xmlnTileset)
 {
 	TiXmlElement *xmleTileset = NULL;
 	xmleTileset = xmlnTileset->ToElement();
+	char *szAux = NULL;
 
 	m_sName = xmleTileset->Attribute("name");
 	m_nFirstGId = atoi(xmleTileset->Attribute("firstgid"));
 	m_nTileW = atoi(xmleTileset->Attribute("tilewidth"));
 	m_nTileH = atoi(xmleTileset->Attribute("tileheight"));
+
+	szAux = (char *) xmleTileset->Attribute("margin");
+
+	if (szAux) {
+		m_nMargin = atoi(szAux);
+		szAux = NULL;
+	}
+
+	szAux = (char *) xmleTileset->Attribute("spacing");
+	if (szAux) {
+		m_nSpacing = atoi(szAux);
+	}
 
 	m_palTilePalette = CFactory::createTilesetImg(m_nTileW, m_nTileH);
 	m_palTilePalette->initialize(xmlnTileset->FirstChild("image"));

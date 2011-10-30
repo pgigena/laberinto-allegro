@@ -15,6 +15,8 @@ public:
 	int getFirstGId();
 	int getTileW();
 	int getTileH();
+	int getMargin();
+	int getSpacing();
 
 	CTilesetImg * getTilePalette();
 
@@ -29,6 +31,9 @@ private:
 
 	// Width and height of a tile in pixels
 	int m_nTileW, m_nTileH;
+
+	int m_nMargin;
+	int m_nSpacing;
 
 	CTilesetImg *m_palTilePalette;
 };
