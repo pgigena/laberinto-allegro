@@ -47,6 +47,23 @@ CTilesetImg * CTileset::getTilePalette()
 	return m_palTilePalette;
 }
 
+int CTileset::getTileX(int nGId)
+{
+	return ((m_nTileW + m_nSpacing) * ((nGId - m_nFirstGId) % m_palTilePalette->getRowSize())) + m_nMargin;
+}
+
+int CTileset::getTileY(int nGId)
+{
+	return ((m_nTileH + m_nSpacing) * ((nGId - m_nFirstGId) / m_palTilePalette->getRowSize())) + m_nMargin;
+}
+
+/*Point CTileset::getTilePos(int nGId)
+{
+	Point p;
+	p.x = getTileX(nGId);
+	p.y = getTileY(nGId);
+}*/
+
 int CTileset::initialize(TiXmlNode *xmlnTileset)
 {
 	TiXmlElement *xmleTileset = NULL;

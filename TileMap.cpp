@@ -45,12 +45,7 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 	CTilesetImg *tliPalette = NULL;
 	ALLEGRO_BITMAP *bmpMesh = NULL;
 	int nTileIndex;
-	int nRowSize;
 //	int nTranspColor;
-	int nTileRow, nTileCol;
-	int nTileW, nTileH;
-	int nMargin, nTileSpacing;
-	int nFirstGId;
 
 	al_set_target_bitmap(al_get_backbuffer(display));
 	
@@ -76,29 +71,18 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 				{
 					tlsCurrentTileset = (*itTileset);
 					if (nTileIndex >= tlsCurrentTileset->getFirstGId()) {
-						nFirstGId = tlsCurrentTileset->getFirstGId();
-
 						tliPalette = tlsCurrentTileset->getTilePalette();
-						nRowSize = tliPalette->getRowSize();
 
-						nTileRow = (nTileIndex - nFirstGId) / nRowSize;
-						nTileCol = (nTileIndex - nFirstGId) % nRowSize;
-
-						nTileW = tlsCurrentTileset->getTileW();
-						nTileH = tlsCurrentTileset->getTileH();
-
-						nTileSpacing = tlsCurrentTileset->getSpacing();
-						nMargin = tlsCurrentTileset->getMargin();
-						//nTranspColor = tlsCurrentTileset->getTilePalette()->getTransparentColor();
-
-						//bmpMesh = tliPalette->getImage()->getResource();
+						//nTranspColor = tliPalette->getTransparentColor();
 						bmpMesh = tliPalette->getImage();
+						//bmpMesh = tliPalette->getImage()->getResource();
 
 						al_draw_bitmap_region(bmpMesh,
-							((nTileW + nTileSpacing)* nTileCol) + nMargin,
-							((nTileH + nTileSpacing) * nTileRow) + nMargin,
-							nTileW, nTileH,
-									(m_nTileWidth * x), (m_nTileHeight * y), 0);
+										tlsCurrentTileset->getTileX(nTileIndex),
+										tlsCurrentTileset->getTileY(nTileIndex),
+										tlsCurrentTileset->getTileW(),
+										tlsCurrentTileset->getTileH(),
+										(m_nTileWidth * x), (m_nTileHeight * y), 0);
 						break;
 					}
 				}
