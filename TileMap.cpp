@@ -7,6 +7,7 @@ CTileMap::CTileMap()
 
 CTileMap::~CTileMap(void)
 {
+	delete m_xmlMapFile;
 	m_vLayers.clear();
 	m_vTilesets.clear();
 }
@@ -48,33 +49,43 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 //	int nTranspColor;
 
 	al_set_target_bitmap(al_get_backbuffer(display));
-	
+
+	// Iterate through the layers from bottom to top painting each one
 	for (LayerVector::iterator itLayer = m_vLayers.begin(); itLayer != m_vLayers.end(); ++itLayer) {
 		lyrCurrentLayer = (*itLayer);
+
 		tgTiles = lyrCurrentLayer->getTileGrid();
+
+		// Iterate through the rows of the current layer
 		for (int x = 0; x < lyrCurrentLayer->getWidth(); x++)
 		{
 			tc.x = x;
 
+			// Iterate through the columns of the current row of the layer
 			for (int y = 0; y < lyrCurrentLayer->getHeight(); y++)
 			{
 				tc.y = y;
 
-				// If the coordinate has no elements, skip to the next
+				// If the coordinate has no Tile element, skip to the next
 				if (tgTiles->find(tc) == tgTiles->end()) {
 					continue;
 				}
 
 				nTileIndex = tgTiles->at(tc)->getTileIndex();
 
+				// Iterate backwards through the available tilesets for the map in order to find the one corresponding to the current GId
 				for (TilesetVector::reverse_iterator itTileset = m_vTilesets.rbegin(); itTileset != m_vTilesets.rend(); ++itTileset)
 				{
 					tlsCurrentTileset = (*itTileset);
+
+					// If the GId is within the current tileset, draw it
 					if (nTileIndex >= tlsCurrentTileset->getFirstGId()) {
 						tliPalette = tlsCurrentTileset->getTilePalette();
 
+						// TODO: HANDLE EXPLICIT TRANSPARENCY
 						//nTranspColor = tliPalette->getTransparentColor();
 						bmpMesh = tliPalette->getImage();
+						// TODO: IMPLEMENT RESOURCE STACK CORRECTLY
 						//bmpMesh = tliPalette->getImage()->getResource();
 
 						al_draw_bitmap_region(bmpMesh,
@@ -83,6 +94,8 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 										tlsCurrentTileset->getTileW(),
 										tlsCurrentTileset->getTileH(),
 										(m_nTileWidth * x), (m_nTileHeight * y), 0);
+
+						// End the loop in order to avoid the tile from being overwritten by an empty image
 						break;
 					}
 				}

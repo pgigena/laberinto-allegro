@@ -11,6 +11,7 @@ CResBitmap::CResBitmap()
 
 CResBitmap::~CResBitmap()
 {
+	unload();
 }
 
 int CResBitmap::load() {

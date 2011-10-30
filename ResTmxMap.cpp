@@ -8,7 +8,7 @@ CResTmxMap::CResTmxMap()
 
 CResTmxMap::~CResTmxMap()
 {
-	delete m_xmlMapFile;
+	unload();
 }
 
 int CResTmxMap::load()
@@ -23,7 +23,8 @@ int CResTmxMap::load()
 	return 0;
 }
 
-/*int CResTmxMap::unload()
+int CResTmxMap::unload()
 {
+	delete m_xmlMapFile;
 	return 0;
-}*/
+}
