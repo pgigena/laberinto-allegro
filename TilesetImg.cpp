@@ -3,10 +3,17 @@
 
 CTilesetImg::CTilesetImg(int nSpriteW, int nSpriteH)
 {
+	CTilesetImg(nSpriteW, nSpriteH, 0, 0);
+}
+
+CTilesetImg::CTilesetImg(int nSpriteW, int nSpriteH, int nMargin, int nSpacing)
+{
 	m_nTransparentColor = -1;
 
 	m_nSpriteW = nSpriteW;
 	m_nSpriteH = nSpriteH;
+	m_nMargin = nMargin;
+	m_nSpacing = nSpacing;
 }
 
 CTilesetImg::~CTilesetImg(void)
@@ -42,7 +49,7 @@ int CTilesetImg::initialize(TiXmlNode * xmlnImage)
 	m_nWidth = atoi(xmleImage->Attribute("width"));
 	m_nHeight = atoi(xmleImage->Attribute("height"));
 
-	m_nRowSize = m_nWidth / m_nSpriteW;
+	m_nRowSize = m_nWidth / (m_nSpriteW + m_nSpacing);
 
 	char *sTrans = (char *) xmleImage->Attribute("trans");
 

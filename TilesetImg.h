@@ -8,6 +8,7 @@
 class CTilesetImg
 {
 public:
+	CTilesetImg(int nSpriteW, int nSpriteH, int nMargin, int nSpacing);
 	CTilesetImg(int nSpriteW, int nSpriteH);
 	~CTilesetImg(void);
 
@@ -20,6 +21,7 @@ public:
 private:
 	int m_nWidth, m_nHeight;
 	int m_nSpriteW, m_nSpriteH;
+	int m_nMargin, m_nSpacing;
 
 	int m_nTransparentColor;
 

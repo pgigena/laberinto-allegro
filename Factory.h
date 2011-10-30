@@ -26,6 +26,7 @@ public:
 	
 	// SpritePalette
 	static CTilesetImg * createTilesetImg(int nSpriteW, int nSpriteH);
+	static CTilesetImg * createTilesetImg(int nSpriteW, int nSpriteH, int nMargin, int nSpacing);
 
 	// Layer
 	static CLayer * createLayer();
