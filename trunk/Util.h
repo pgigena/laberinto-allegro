@@ -30,6 +30,12 @@ typedef struct TileCoord
     }
 } TileCoord;
 
+/*typedef struct Point
+{
+	int x;
+	int y;
+} Point;*/
+
 class TileCoordHash{
 
 public:

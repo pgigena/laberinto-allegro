@@ -18,6 +18,8 @@ CTilesetImg::CTilesetImg(int nSpriteW, int nSpriteH, int nMargin, int nSpacing)
 
 CTilesetImg::~CTilesetImg(void)
 {
+	//delete m_bmpPalette;
+	al_destroy_bitmap(m_bmpPalette);
 }
 
 //CResBitmap * CTilesetImg::getImage()
@@ -51,6 +53,7 @@ int CTilesetImg::initialize(TiXmlNode * xmlnImage)
 
 	m_nRowSize = m_nWidth / (m_nSpriteW + m_nSpacing);
 
+	// Optional attribute
 	char *sTrans = (char *) xmleImage->Attribute("trans");
 
 	if (sTrans != NULL) {

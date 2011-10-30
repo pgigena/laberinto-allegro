@@ -10,6 +10,7 @@ CTileset::CTileset(void)
 
 CTileset::~CTileset(void)
 {
+	delete m_palTilePalette;
 }
 
 int CTileset::getFirstGId()
@@ -75,6 +76,7 @@ int CTileset::initialize(TiXmlNode *xmlnTileset)
 	m_nTileW = atoi(xmleTileset->Attribute("tilewidth"));
 	m_nTileH = atoi(xmleTileset->Attribute("tileheight"));
 
+	// Optional attribute
 	szAux = (char *) xmleTileset->Attribute("margin");
 
 	if (szAux) {
@@ -82,9 +84,11 @@ int CTileset::initialize(TiXmlNode *xmlnTileset)
 		szAux = NULL;
 	}
 
+	// Optional attribute
 	szAux = (char *) xmleTileset->Attribute("spacing");
 	if (szAux) {
 		m_nSpacing = atoi(szAux);
+		szAux = NULL;
 	}
 
 	m_palTilePalette = CFactory::createTilesetImg(m_nTileW, m_nTileH, m_nMargin, m_nSpacing);

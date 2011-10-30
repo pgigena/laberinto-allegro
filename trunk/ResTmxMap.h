@@ -12,7 +12,7 @@ public:
 	~CResTmxMap();
 
 	int load();
-	//int unload();
+	int unload();
 
 	TiXmlDocument * getResource();
 
