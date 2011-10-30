@@ -94,7 +94,10 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 						//bmpMesh = tliPalette->getImage()->getResource();
 						bmpMesh = tliPalette->getImage();
 
-						al_draw_bitmap_region(bmpMesh, ((nTileW + nTileSpacing)* nTileCol) + nMargin, ((nTileH + nTileSpacing) * nTileRow) + nMargin, nTileW, nTileH,
+						al_draw_bitmap_region(bmpMesh,
+							((nTileW + nTileSpacing)* nTileCol) + nMargin,
+							((nTileH + nTileSpacing) * nTileRow) + nMargin,
+							nTileW, nTileH,
 									(m_nTileWidth * x), (m_nTileHeight * y), 0);
 						break;
 					}

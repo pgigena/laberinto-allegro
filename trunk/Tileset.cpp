@@ -70,7 +70,7 @@ int CTileset::initialize(TiXmlNode *xmlnTileset)
 		m_nSpacing = atoi(szAux);
 	}
 
-	m_palTilePalette = CFactory::createTilesetImg(m_nTileW, m_nTileH);
+	m_palTilePalette = CFactory::createTilesetImg(m_nTileW, m_nTileH, m_nMargin, m_nSpacing);
 	m_palTilePalette->initialize(xmlnTileset->FirstChild("image"));
 
 	return 0;

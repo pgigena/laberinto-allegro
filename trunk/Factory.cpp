@@ -37,6 +37,11 @@ CTilesetImg * CFactory::createTilesetImg(int nSpriteW, int nSpriteH)
 	return new CTilesetImg(nSpriteW, nSpriteH);
 }
 
+CTilesetImg * CFactory::createTilesetImg(int nSpriteW, int nSpriteH, int nMargin, int nSpacing)
+{
+	return new CTilesetImg(nSpriteW, nSpriteH, nMargin, nSpacing);
+}
+
 CLayer * CFactory::createLayer()
 {
 	return new CLayer();

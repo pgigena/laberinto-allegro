@@ -18,6 +18,9 @@ public:
 	int getMargin();
 	int getSpacing();
 
+	//int getTileX(int nGId);
+	//int getTileY(int nGId);
+
 	CTilesetImg * getTilePalette();
 
 	int initialize(TiXmlNode *xmlnTileset);
