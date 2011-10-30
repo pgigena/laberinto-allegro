@@ -18,8 +18,9 @@ public:
 	int getMargin();
 	int getSpacing();
 
-	//int getTileX(int nGId);
-	//int getTileY(int nGId);
+	int getTileX(int nGId);
+	int getTileY(int nGId);
+	//Point getTilePos(int nGId);
 
 	CTilesetImg * getTilePalette();
 
