@@ -51,14 +51,19 @@ int CLayer::parseLayerData(TiXmlNode *xmlnLayer)
 	TiXmlElement *xmleTile = NULL;
 	CTile *tlTile = NULL;
 	TileCoord tc;
+	int nTileGId;
 
 	tc.x = 0;
 	tc.y = 0;
 
 	while (xmlnTile) {
 		xmleTile = xmlnTile->ToElement();
+		nTileGId = atoi(xmleTile->Attribute("gid"));
 
-		m_mapTiles->insert(TileGrid::value_type(tc, CFactory::createTile(atoi(xmleTile->Attribute("gid")))));
+		// If no valid GId is assigned, skip insertion
+		if (nTileGId != 0) {
+			m_mapTiles->insert(TileGrid::value_type(tc, CFactory::createTile(nTileGId)));
+		}
 
 		xmlnTile = xmlnData->IterateChildren("tile", xmlnTile);
 
