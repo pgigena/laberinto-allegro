@@ -66,9 +66,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Collidable.cpp" />
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlayerCharacter.cpp" />
     <ClCompile Include="ResBitmap.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceStack.cpp" />
@@ -84,9 +86,11 @@
     <ClCompile Include="TinyXML\xmltest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collidable.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="IPaintable.h" />
     <ClInclude Include="Layer.h" />
+    <ClInclude Include="PlayerCharacter.h" />
     <ClInclude Include="ResBitmap.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceStack.h" />
