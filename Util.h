@@ -11,6 +11,8 @@ using namespace std;
 
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_image.h>
+#include <allegro5\allegro_font.h>
+#include <allegro5\allegro_ttf.h>
 
 #include "TinyXML\tinyxml.h"
 
@@ -30,11 +32,15 @@ typedef struct TileCoord
     }
 } TileCoord;
 
-/*typedef struct Point
-{
-	int x;
-	int y;
-} Point;*/
+typedef struct Rect {
+	double w;
+	double h;
+} Rect;
+
+typedef struct Point {
+	double x;
+	double y;
+} Point;
 
 class TileCoordHash{
 
