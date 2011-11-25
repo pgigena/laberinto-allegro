@@ -32,7 +32,7 @@ TileGrid * CLayer::getTileGrid()
 	return m_mapTiles;
 }
 
-int CLayer::initialize(TiXmlNode *xmlnLayer)
+int CLayer::parseTmx(TiXmlNode *xmlnLayer)
 {
 	TiXmlElement *xmleLayer = xmlnLayer->ToElement();
 

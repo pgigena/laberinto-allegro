@@ -130,7 +130,7 @@ void CTileMap::drawBuffer(ALLEGRO_DISPLAY *display)
 	al_hold_bitmap_drawing(false);
 }
 
-int CTileMap::initialize()
+int CTileMap::parseTmx()
 {
 	if (!m_xmlMapFile->LoadFile()) {
 		return 1;
@@ -162,7 +162,7 @@ int CTileMap::parseTilesets(TiXmlNode *xmlnMap) {
 	while (xmlnTileset) {
 
 		m_vTilesets.push_back(CFactory::createTileset());
-		m_vTilesets.back()->initialize(xmlnTileset);
+		m_vTilesets.back()->parseTmx(xmlnTileset);
 
 		xmlnTileset = xmlnMap->IterateChildren("tileset", xmlnTileset);
 	}
@@ -176,9 +176,20 @@ int CTileMap::parseLayers(TiXmlNode *xmlnMap) {
 	while (xmlnLayer) {
 
 		m_vLayers.push_back(CFactory::createLayer());
-		m_vLayers.back()->initialize(xmlnLayer);
+		m_vLayers.back()->parseTmx(xmlnLayer);
 
 		xmlnLayer = xmlnMap->IterateChildren("layer", xmlnLayer);
 	}
 	return 0;
+}
+
+void CTileMap::loadResources()
+{
+	CTileset *tls;
+
+	for (TilesetVector::reverse_iterator itTileset = m_vTilesets.rbegin(); itTileset != m_vTilesets.rend(); ++itTileset)
+	{
+		tls = (*itTileset);
+		tls->loadResources();
+	}
 }

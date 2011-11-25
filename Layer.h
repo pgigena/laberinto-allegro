@@ -10,7 +10,7 @@ public:
 	CLayer(void);
 	~CLayer(void);
 
-	int initialize(TiXmlNode *xmlnLayer);
+	int parseTmx(TiXmlNode *xmlnLayer);
 
 	int getWidth();
 	int getHeight();

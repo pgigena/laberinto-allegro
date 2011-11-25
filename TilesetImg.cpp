@@ -38,15 +38,10 @@ int CTilesetImg::getTransparentColor()
 	return m_nTransparentColor;
 }
 
-int CTilesetImg::initialize(TiXmlNode * xmlnImage)
+int CTilesetImg::parseTmx(TiXmlNode * xmlnImage)
 {
 	TiXmlElement *xmleImage = xmlnImage->ToElement();
-	m_bmpPalette = al_load_bitmap(xmleImage->Attribute("source"));
-	/*m_bmpPalette = CFactory::createBitmap(xmleImage->Attribute("source"));
-
-	if (!m_bmpPalette->load()) {
-		return 1;
-	}*/
+	m_sPath = xmleImage->Attribute("source");
 
 	m_nWidth = atoi(xmleImage->Attribute("width"));
 	m_nHeight = atoi(xmleImage->Attribute("height"));
@@ -61,4 +56,14 @@ int CTilesetImg::initialize(TiXmlNode * xmlnImage)
 	}
 
 	return 0;
+}
+
+void CTilesetImg::loadResources()
+{
+	m_bmpPalette = al_load_bitmap(m_sPath.c_str());
+	/*m_bmpPalette = CFactory::createBitmap(xmleImage->Attribute("source"));
+
+	if (!m_bmpPalette->load()) {
+		return 1;
+	}*/
 }

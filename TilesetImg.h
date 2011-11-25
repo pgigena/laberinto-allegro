@@ -17,7 +17,9 @@ public:
 	//CResBitmap * getImage();
 	ALLEGRO_BITMAP * getImage();
 
-	int initialize(TiXmlNode * xmlnImage);
+	int parseTmx(TiXmlNode * xmlnImage);
+	void loadResources();
+
 private:
 	int m_nWidth, m_nHeight;
 	int m_nSpriteW, m_nSpriteH;
@@ -27,6 +29,8 @@ private:
 
 	// Row size in sprites
 	int m_nRowSize;
+
+	string m_sPath;
 
 	//CResBitmap * m_bmpPalette;
 	ALLEGRO_BITMAP * m_bmpPalette;

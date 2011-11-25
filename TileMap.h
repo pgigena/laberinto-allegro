@@ -11,7 +11,6 @@ typedef vector<CLayer *> LayerVector;
 class CTileMap
 {
 public:
-	//CTileMap(int nWidth, int nHeight, int nTileWidth, int nTileHeight);
 	CTileMap();
 	~CTileMap();
 
@@ -20,7 +19,8 @@ public:
 	void setTmxFile(TiXmlDocument *xdocFile);
 
 	// Carga y parseo de TMX
-	int initialize();
+	int parseTmx();
+	void loadResources();
 
 	int getWidth();
 	int getHeight();
