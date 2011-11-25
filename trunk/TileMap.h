@@ -18,8 +18,10 @@ public:
 
 	void setTmxFile(TiXmlDocument *xdocFile);
 
-	// Carga y parseo de TMX
+	// TMX Loading and parsing
 	int parseTmx();
+
+	// Load of all the resources needed to draw the map
 	void loadResources();
 
 	int getWidth();
@@ -29,16 +31,22 @@ public:
 	int getTileHeight();
 
 private:
+	// Width and height of the map (Pixels)
 	int m_nWidth, m_nHeight;
 
-	int m_nTileWidth;
-	int m_nTileHeight;
+	// Width and height of each tile (Pixels)
+	int m_nTileWidth, m_nTileHeight;
 
+	// XML document containing the information of the map
 	TiXmlDocument *m_xmlMapFile;
 
+	// Tilesets used in the map
 	TilesetVector m_vTilesets;
+
+	// Contains the information of each layer 
 	LayerVector m_vLayers;
 
+	// Buffer where the drawn map is kept
 	ALLEGRO_BITMAP *m_bmpMapBuffer;
 
 	int parseTilesets(TiXmlNode *xmlnMap);

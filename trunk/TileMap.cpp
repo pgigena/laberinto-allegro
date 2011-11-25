@@ -65,14 +65,9 @@ void CTileMap::drawBuffer(ALLEGRO_DISPLAY *display)
 	al_set_target_backbuffer(display);
 	m_bmpMapBuffer = al_create_bitmap(m_nWidth * m_nTileWidth, m_nHeight * m_nTileHeight);
 	al_set_target_bitmap(m_bmpMapBuffer);
-		
-	if (al_get_bitmap_flags(m_bmpMapBuffer) & ALLEGRO_VIDEO_BITMAP) {
-		cout << "MapBuffer: VIDEO BITMAP!!" << endl;
-	} else {
-		cout << "MapBuffer: MEMORY BITMAP!!" << endl;
-	}
 
-	al_hold_bitmap_drawing(true);
+	// Check if this applies to al_draw_bitmap_region!
+	//al_hold_bitmap_drawing(true);
 
 	// Iterate through the layers from bottom to top painting each one
 	for (LayerVector::iterator itLayer = m_vLayers.begin(); itLayer != m_vLayers.end(); ++itLayer) {
@@ -127,7 +122,7 @@ void CTileMap::drawBuffer(ALLEGRO_DISPLAY *display)
 		}
 	}
 
-	al_hold_bitmap_drawing(false);
+	//al_hold_bitmap_drawing(false);
 }
 
 int CTileMap::parseTmx()

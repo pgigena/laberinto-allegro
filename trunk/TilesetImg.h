@@ -21,13 +21,16 @@ public:
 	void loadResources();
 
 private:
+	// Width and height of the Image (Pixels)
 	int m_nWidth, m_nHeight;
+	// Width and height of each sprite (Pixels)
 	int m_nSpriteW, m_nSpriteH;
+	// Margin of the palette and spacing between tiles (Pixels)
 	int m_nMargin, m_nSpacing;
 
 	int m_nTransparentColor;
 
-	// Row size in sprites
+	// Tiles per row
 	int m_nRowSize;
 
 	string m_sPath;
