@@ -9,14 +9,15 @@ public:
 	CCollidable(void);
 	~CCollidable(void);
 
-	bool isColliding(CCollidable *col);
-	bool isColliding(Point p, Rect r);
 	Point getPos();
 	Rect getContainer();
 
+	bool isColliding(CCollidable *c);
+	bool isColliding(Point p, Rect r);
+
 protected:
-	Rect m_rcContainer;
-	Point m_ptPos;
+	Point m_pos;
+	Rect m_container;
 };
 
 #endif	// COLLIDABLE_H

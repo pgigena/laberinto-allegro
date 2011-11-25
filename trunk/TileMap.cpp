@@ -3,11 +3,15 @@
 
 CTileMap::CTileMap()
 {
+	m_bmpMapBuffer = NULL;
 }
 
 CTileMap::~CTileMap(void)
 {
 	delete m_xmlMapFile;
+	if (m_bmpMapBuffer) {
+		al_destroy_bitmap(m_bmpMapBuffer);
+	}
 	m_vLayers.clear();
 	m_vTilesets.clear();
 }
@@ -39,6 +43,16 @@ int CTileMap::getTileHeight()
 
 void CTileMap::paint(ALLEGRO_DISPLAY *display)
 {
+	// Check that the map buffer exists
+	if (!m_bmpMapBuffer) {
+		drawBuffer(display);
+	}
+	al_set_target_bitmap(al_get_backbuffer(display));
+	al_draw_bitmap(m_bmpMapBuffer, 0, 0, 0);
+}
+
+void CTileMap::drawBuffer(ALLEGRO_DISPLAY *display)
+{
 	TileCoord tc;
 	TileGrid *tgTiles = NULL;
 	CLayer *lyrCurrentLayer = NULL;
@@ -48,7 +62,17 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 	int nTileIndex;
 //	int nTranspColor;
 
-	al_set_target_bitmap(al_get_backbuffer(display));
+	al_set_target_backbuffer(display);
+	m_bmpMapBuffer = al_create_bitmap(m_nWidth * m_nTileWidth, m_nHeight * m_nTileHeight);
+	al_set_target_bitmap(m_bmpMapBuffer);
+		
+	if (al_get_bitmap_flags(m_bmpMapBuffer) & ALLEGRO_VIDEO_BITMAP) {
+		cout << "MapBuffer: VIDEO BITMAP!!" << endl;
+	} else {
+		cout << "MapBuffer: MEMORY BITMAP!!" << endl;
+	}
+
+	al_hold_bitmap_drawing(true);
 
 	// Iterate through the layers from bottom to top painting each one
 	for (LayerVector::iterator itLayer = m_vLayers.begin(); itLayer != m_vLayers.end(); ++itLayer) {
@@ -102,6 +126,8 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 			}
 		}
 	}
+
+	al_hold_bitmap_drawing(false);
 }
 
 int CTileMap::initialize()

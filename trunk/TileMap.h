@@ -39,8 +39,12 @@ private:
 	TilesetVector m_vTilesets;
 	LayerVector m_vLayers;
 
+	ALLEGRO_BITMAP *m_bmpMapBuffer;
+
 	int parseTilesets(TiXmlNode *xmlnMap);
 	int parseLayers(TiXmlNode *xmlnMap);
+
+	void drawBuffer(ALLEGRO_DISPLAY *disp);
 };
 
 #endif // TILE_MAP_H
