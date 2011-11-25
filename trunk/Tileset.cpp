@@ -65,7 +65,7 @@ int CTileset::getTileY(int nGId)
 	p.y = getTileY(nGId);
 }*/
 
-int CTileset::initialize(TiXmlNode *xmlnTileset)
+int CTileset::parseTmx(TiXmlNode *xmlnTileset)
 {
 	TiXmlElement *xmleTileset = NULL;
 	xmleTileset = xmlnTileset->ToElement();
@@ -92,7 +92,12 @@ int CTileset::initialize(TiXmlNode *xmlnTileset)
 	}
 
 	m_palTilePalette = CFactory::createTilesetImg(m_nTileW, m_nTileH, m_nMargin, m_nSpacing);
-	m_palTilePalette->initialize(xmlnTileset->FirstChild("image"));
+	m_palTilePalette->parseTmx(xmlnTileset->FirstChild("image"));
 
 	return 0;
+}
+
+void CTileset::loadResources()
+{
+	return m_palTilePalette->loadResources();
 }

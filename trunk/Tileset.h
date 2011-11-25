@@ -24,7 +24,8 @@ public:
 
 	CTilesetImg * getTilePalette();
 
-	int initialize(TiXmlNode *xmlnTileset);
+	int parseTmx(TiXmlNode *xmlnTileset);
+	void loadResources();
 
 private:
 	// Name of the Tileset

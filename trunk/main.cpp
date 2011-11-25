@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 	tmMap = CFactory::createTileMap();
 
 	if (!argv[1]) {
-		tmMap->setTmxFile(new TiXmlDocument("large.tmx"));
+		tmMap->setTmxFile(new TiXmlDocument("test.tmx"));
 	} else {
 		tmMap->setTmxFile(new TiXmlDocument(argv[1]));
 	}
@@ -79,26 +79,27 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	display = al_create_display(800, 800);
+	tmMap->parseTmx();
+
+	int nScreenWidth =  tmMap->getWidth() * tmMap->getTileWidth();
+	int nScreenHeight = tmMap->getHeight() * tmMap->getTileHeight();
+
+	display = al_create_display(nScreenWidth, nScreenHeight);
+	if(!display) {
+		fprintf(stderr, "failed to create display!\n");
+		al_destroy_timer(timer);
+		return -1;
+	}
+
 	al_set_target_backbuffer(display);
 	al_set_new_bitmap_flags(ALLEGRO_VIDEO_BITMAP);
+
+	tmMap->loadResources();
 
 	font = al_load_ttf_font("arial.ttf", 10,0 );
 
 	if (!font) {
 		fprintf(stderr, "failed to create the font!\n");
-		return -1;
-	}
-
-	tmMap->initialize();
-
-	int nScreenWidth =  tmMap->getWidth() * tmMap->getTileWidth();
-	int nScreenHeight = tmMap->getHeight() * tmMap->getTileHeight();
-
-	//display = al_create_display(nScreenWidth, nScreenHeight);
-	if(!display) {
-		fprintf(stderr, "failed to create display!\n");
-		al_destroy_timer(timer);
 		return -1;
 	}
 
