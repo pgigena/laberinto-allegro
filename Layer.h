@@ -20,6 +20,7 @@ public:
 	TileGrid *getTileGrid();
 
 private:
+	// Width and height of the layer (Tiles)
 	int m_nWidth, m_nHeight;
 	string m_sName;
 

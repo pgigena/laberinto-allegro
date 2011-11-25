@@ -31,13 +31,15 @@ private:
 	// Name of the Tileset
 	string m_sName;
 
-	// Id of the first sprite on the palette
+	// Id of the first sprite on the palette (Relative to all pallettes)
 	int m_nFirstGId;
 
-	// Width and height of a tile in pixels
+	// Width and height of a tile (Pixels)
 	int m_nTileW, m_nTileH;
 
+	// Margin of the palette (Pixels)
 	int m_nMargin;
+	// Spacing between tiles (Pixels)
 	int m_nSpacing;
 
 	CTilesetImg *m_palTilePalette;

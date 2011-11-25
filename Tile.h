@@ -6,7 +6,6 @@
 class CTile
 {
 public:
-	// Agregar ide
 	CTile(int nTileIndex);
 	CTile(void);
 	~CTile(void);
@@ -15,12 +14,12 @@ public:
 	int getTileIndex();
 
 private:
-	// Código que representa además del indice si es pisable o no
+	// Index that indicates the sprite (from the palette) to be used when drawing
 	int m_nTileIndex;
-	// No tiene que tener un Width y un Height?
+	// Does it need Width and Height?
 };
 
-// Definición del mapa TileGrid
+// TileGrid map definition
 typedef unordered_map<TileCoord, CTile*, TileCoordHash> TileGrid;
 
 #endif // TILE_H
