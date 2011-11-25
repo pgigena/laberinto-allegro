@@ -12,24 +12,29 @@ CCollidable::~CCollidable(void)
 
 Point CCollidable::getPos()
 {
-	return m_ptPos;
+	return m_pos;
 }
 
 Rect CCollidable::getContainer()
 {
-	return m_rcContainer;
+	return m_container;
 }
 
-bool CCollidable::isColliding(CCollidable *c) {
+bool CCollidable::isColliding(CCollidable *c)
+{
 	return isColliding(c->getPos(), c->getContainer());
 }
 
-bool CCollidable::isColliding(Point p, Rect r) {
-	if (m_ptPos.y + m_rcContainer.h <= p.y) return false; // Arriba
-	if (m_ptPos.y >= p.y + r.h) return false; // Abajo
-
-	if (m_ptPos.x + m_rcContainer.w <= p.x) return false; // Izquierda
-	if (m_ptPos.x >= p.x + r.w) return false; // Derecha
+bool CCollidable::isColliding(Point p, Rect r)
+{
+	if(m_pos.y + m_container.h < p.y)
+		return false;
+	if(m_pos.y > p.y + r.h)
+		return false;
+	if(m_pos.x + m_container.w < p.x)
+		return false;
+	if(m_pos.x > p.x + r.w)	
+		return false;
 
 	return true;
 }

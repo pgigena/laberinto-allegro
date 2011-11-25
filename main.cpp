@@ -2,51 +2,46 @@
 
 #include "Util.h"
 #include "Factory.h"
-#include "PlayerCharacter.h"
+#include "Character.h"
+
+// Constantes
+const float FPS = 60;
+
+// Variables
+bool bKeys[] = { false, false, false, false };
+bool bRedraw = true;
+bool bExit = false;
+ALLEGRO_BITMAP *bmp = NULL;
+
+// Funciones
+void onKeyDown(int nKeycode);
+void onKeyUp(int nKeycode);
 
 // Main
 // ----------------------------------------------------------------------------
-const float FPS = 60;
-
-enum MovementKeys {
-	UP, DOWN, RIGHT, LEFT
-};
-
-bool bKey[4] = { false, false, false, false };
-bool bExit = false;
-
-void onKeyUp(ALLEGRO_KEYBOARD_EVENT ev);
-void onKeyDown(ALLEGRO_KEYBOARD_EVENT ev);
-
 int main(int argc, char **argv)
 {
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
 	ALLEGRO_TIMER *fpsTimer = NULL;
+	ALLEGRO_FONT *font = NULL;
+	ALLEGRO_BITMAP *bmpFPSCount = NULL;
+	char szFPSText[15];
 
-	//ALLEGRO_BITMAP *bmpTilePalette = NULL;
-	//string sTilePalettePath = "tilesetTest.png";
-	
-	bool bRedraw = true;
-	
+	CCharacter *player = new CCharacter();
 
-	/*for (int i = 1; i < argc; i ++) {
-		cout << "arg[" << i << "]=" << argv[i] << endl;
-	}
-	return 0;*/
+	int nFrames = 0;
 
 	CTileMap *tmMap = NULL;
 
 	tmMap = CFactory::createTileMap();
-	//tmMap->setTmxFile(new TiXmlDocument("test.tmx"));*/
+
 	if (!argv[1]) {
-		tmMap->setTmxFile(new TiXmlDocument("test.tmx"));
+		tmMap->setTmxFile(new TiXmlDocument("large.tmx"));
 	} else {
 		tmMap->setTmxFile(new TiXmlDocument(argv[1]));
 	}
-
-	CPlayerCharacter *pc = new CPlayerCharacter();
 
 	if(!al_init()) {
 		fprintf(stderr, "failed to initialize allegro!\n");
@@ -57,7 +52,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "failed to initialize the mouse!\n");
 		return -1;
 	}
- 
+
 	if(!al_install_keyboard()) {
 		fprintf(stderr, "failed to initialize the keyboard!\n");
 		return -1;
@@ -69,38 +64,50 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
+	al_init_font_addon();
+
+	if (!al_init_ttf_addon()) {
+		fprintf(stderr, "failed to initialize the ttf addon!\n");
+		return -1;
+	}
+
 	timer = al_create_timer(1.0 / FPS);
 	fpsTimer = al_create_timer(1.0);
-	if(!timer) {
+
+	if(!timer || !fpsTimer) {
 		fprintf(stderr, "failed to create timer!\n");
 		return -1;
 	}
- 
+
+	display = al_create_display(800, 800);
+	al_set_target_backbuffer(display);
+	al_set_new_bitmap_flags(ALLEGRO_VIDEO_BITMAP);
+
+	font = al_load_ttf_font("arial.ttf", 10,0 );
+
+	if (!font) {
+		fprintf(stderr, "failed to create the font!\n");
+		return -1;
+	}
+
 	tmMap->initialize();
 
 	int nScreenWidth =  tmMap->getWidth() * tmMap->getTileWidth();
 	int nScreenHeight = tmMap->getHeight() * tmMap->getTileHeight();
 
-	display = al_create_display(nScreenWidth, nScreenHeight);
+	//display = al_create_display(nScreenWidth, nScreenHeight);
 	if(!display) {
 		fprintf(stderr, "failed to create display!\n");
 		al_destroy_timer(timer);
 		return -1;
 	}
 
-	// Creo los objetos del juego
-	//bmpTilePalette = al_load_bitmap(sTilePalettePath.c_str());
-//	tmMap = CFactory::createTileMap(nMapWidth, nMapHeight, nTileWidth, nTileHeight);
-	//tmMap->setSpritePalette(bmpTilePalette);
-	
-	/*TiXmlDocument *d = new TiXmlDocument("C:\\Projects\\test.tmx");
-	d->LoadFile();*/
-
-	/*tmMap->setTmxFile(new TiXmlDocument("test.tmx"));
-	tmMap->initialize();*/
-
+	bmpFPSCount = al_create_bitmap(45, 10);
+	al_set_target_bitmap(bmpFPSCount);
+	al_clear_to_color(al_map_rgb(0,0,0));
 	al_set_target_bitmap(al_get_backbuffer(display));
- 
+	player->setPalette(al_load_bitmap("char_test2.png"));
+	
 	event_queue = al_create_event_queue();
 	if(!event_queue) {
 		fprintf(stderr, "failed to create event_queue!\n");
@@ -120,7 +127,7 @@ int main(int argc, char **argv)
 
 	al_start_timer(timer);
 	al_start_timer(fpsTimer);
- 
+
 	while(!bExit)
 	{
 		ALLEGRO_EVENT ev;
@@ -128,36 +135,47 @@ int main(int argc, char **argv)
  
 		if(ev.type == ALLEGRO_EVENT_TIMER) {
 			if (ev.timer.source == fpsTimer) {
+				sprintf(szFPSText, "FPS: %i", nFrames);
 
-			} else if (ev.timer.source == timer) {
+				nFrames = 0;
 				bRedraw = true;
 			}
-			
-		}
-		else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+
+			if (ev.timer.source == timer) {
+				bRedraw = true;
+			}
+		} else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			bExit = true;
-		}
-		else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+		} else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
 			bExit = true;
 		} else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-			onKeyDown(ev.keyboard);
+			onKeyDown(ev.keyboard.keycode);
 		} else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
-			onKeyUp(ev.keyboard);
+			onKeyUp(ev.keyboard.keycode);
 		}
  
 		if(bRedraw && al_is_event_queue_empty(event_queue)) {
 			bRedraw = false;
 
-			// TODO: Manage player movements
-			if (bKey[UP])	pc->moveUp();
-			else if (bKey[DOWN])	pc->moveDown();
-
-			if (bKey[LEFT])	pc->moveLeft();
-			else if (bKey[RIGHT])	pc->moveRight();
+			if (bKeys[UP]) {
+				player->move(UP);
+			}
+			if (bKeys[DOWN]) {
+				player->move(DOWN);
+			}
+			if (bKeys[LEFT]) {
+				player->move(LEFT);
+			}
+			if (bKeys[RIGHT]) {
+				player->move(RIGHT);
+			}
 
 			tmMap->paint(display);
-			pc->paint(display);
+			player->draw(display);
+			al_draw_bitmap(bmpFPSCount, 2, 2, 0);
+			al_draw_text(font, al_map_rgb(255, 0, 255), 2, 1, 0, szFPSText);
 			al_flip_display();
+			nFrames++;
 		}
 	}
  
@@ -170,43 +188,49 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void onKeyDown(ALLEGRO_KEYBOARD_EVENT ev) {
-	switch (ev.keycode)
+void onKeyDown(int nKeycode) {
+	switch (nKeycode)
+	{
+		case ALLEGRO_KEY_UP:
+			bKeys[UP] = true;
+			break;
+		case ALLEGRO_KEY_DOWN:
+			bKeys[DOWN] = true;
+			break;
+		case ALLEGRO_KEY_LEFT:
+			bKeys[LEFT] = true;
+			break;
+		case ALLEGRO_KEY_RIGHT:
+			bKeys[RIGHT] = true;
+			break;
+	}
+}
+
+void onKeyUp(int nKeycode) {
+	switch (nKeycode)
 	{
 		case ALLEGRO_KEY_P:
 			system("pause");
 			break;
 		case ALLEGRO_KEY_ESCAPE:
 			bExit = true;
+			break;
 		case ALLEGRO_KEY_UP:
-			bKey[UP] = true;
+			bKeys[UP] = false;
 			break;
 		case ALLEGRO_KEY_DOWN:
-			bKey[DOWN] = true;
+			bKeys[DOWN] = false;
 			break;
 		case ALLEGRO_KEY_LEFT:
-			bKey[LEFT] = true;
+			bKeys[LEFT] = false;
 			break;
 		case ALLEGRO_KEY_RIGHT:
-			bKey[RIGHT] = true;
+			bKeys[RIGHT] = false;
 			break;
 	}
 }
 
-void onKeyUp(ALLEGRO_KEYBOARD_EVENT ev) {
-	switch (ev.keycode)
-	{
-		case ALLEGRO_KEY_UP:
-			bKey[UP] = false;
-			break;
-		case ALLEGRO_KEY_DOWN:
-			bKey[DOWN] = false;
-			break;
-		case ALLEGRO_KEY_LEFT:
-			bKey[LEFT] = false;
-			break;
-		case ALLEGRO_KEY_RIGHT:
-			bKey[RIGHT] = false;
-			break;
-	}
+void checkCollisions()
+{
+	//player.isColliding();
 }

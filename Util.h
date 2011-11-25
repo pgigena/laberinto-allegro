@@ -11,10 +11,12 @@ using namespace std;
 
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_image.h>
-#include <allegro5\allegro_font.h>
 #include <allegro5\allegro_ttf.h>
+#include <allegro5\allegro_font.h>
 
 #include "TinyXML\tinyxml.h"
+
+enum Direction { UP, DOWN, LEFT, RIGHT };
 
 typedef struct TileCoord
 {
@@ -32,15 +34,20 @@ typedef struct TileCoord
     }
 } TileCoord;
 
-typedef struct Rect {
-	double w;
-	double h;
+
+typedef struct Point
+{
+	int x;
+	int y;
+} Point;
+
+
+typedef struct Rect
+{
+	int w;
+	int h;
 } Rect;
 
-typedef struct Point {
-	double x;
-	double y;
-} Point;
 
 class TileCoordHash{
 
