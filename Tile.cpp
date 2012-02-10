@@ -1,9 +1,9 @@
 #include "Tile.h"
 
 
-CTile::CTile(int nTileIndex)
+CTile::CTile(int nGId)
 {
-	m_nTileIndex = nTileIndex;
+	m_nGId = nGId;
 }
 
 CTile::CTile(void)
@@ -15,9 +15,9 @@ CTile::~CTile(void)
 	// TODO: Destruyo el bitmap de acá o le pido al ResourceStack que lo haga?
 }
 
-int CTile::getTileIndex()
+int CTile::getGId()
 {
-	return m_nTileIndex;
+	return m_nGId;
 }
 
 /*bool CTile::getWalkable()

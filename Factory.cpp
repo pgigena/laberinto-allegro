@@ -42,12 +42,27 @@ CTilesetImg * CFactory::createTilesetImg(int nSpriteW, int nSpriteH, int nMargin
 	return new CTilesetImg(nSpriteW, nSpriteH, nMargin, nSpacing);
 }
 
-CLayer * CFactory::createLayer()
+CTmxTileLayer * CFactory::createLayer()
 {
-	return new CLayer();
+	return new CTmxTileLayer();
+}
+
+CTmxObjectLayer * CFactory::createObjectLayer()
+{
+	return new CTmxObjectLayer();
 }
 
 CTile * CFactory::createTile(int nIndex)
 {
 	return new CTile(nIndex);
+}
+
+CTmxObject * CFactory::createObject()
+{
+	return new CTmxObject();
+}
+
+CTmxPropertyList * CFactory::createPropertiesList()
+{
+	return new CTmxPropertyList();
 }

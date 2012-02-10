@@ -61,4 +61,9 @@ public:
     }
 };
 
+
+// TMX Only
+typedef pair<const char*, const char*> TmxProperty;
+typedef map<TmxProperty::first_type, TmxProperty::second_type> TmxPropertyList;
+
 #endif // UTIL_H

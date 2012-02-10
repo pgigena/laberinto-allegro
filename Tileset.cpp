@@ -5,12 +5,17 @@ CTileset::CTileset(void)
 {
 	m_nSpacing = 0;
 	m_nMargin = 0;
+	m_mTilesetProps = new TilesetProperties;
 }
 
 
 CTileset::~CTileset(void)
 {
 	delete m_palTilePalette;
+	if (m_mTilesetProps) {
+		m_mTilesetProps->clear();
+		delete m_mTilesetProps;
+	}
 }
 
 int CTileset::getFirstGId()
@@ -94,6 +99,25 @@ int CTileset::parseTmx(TiXmlNode *xmlnTileset)
 	m_palTilePalette = CFactory::createTilesetImg(m_nTileW, m_nTileH, m_nMargin, m_nSpacing);
 	m_palTilePalette->parseTmx(xmlnTileset->FirstChild("image"));
 
+	parseTiles(xmlnTileset);
+
+	return 0;
+}
+
+int CTileset::parseTiles(TiXmlNode *xmlnTileset)
+{
+	TiXmlNode *xmlnTile = xmlnTileset->FirstChild("tile");
+	TiXmlElement * xmleTile = NULL;
+	int nGId = 0;
+
+	while (xmlnTile) {
+		xmleTile = xmlnTile->ToElement();
+		nGId = atoi(xmleTile->Attribute("id"));
+
+		m_mTilesetProps->insert(TilesetProperties::value_type(nGId, CFactory::createPropertiesList()));
+		m_mTilesetProps->at(nGId)->parseTmx(xmlnTile->FirstChild("properties"));
+		xmlnTile = xmlnTileset->IterateChildren("tile", xmlnTile);
+	}
 	return 0;
 }
 

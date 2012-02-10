@@ -5,7 +5,6 @@
 #include "ResBitmap.h"
 #include "TilesetImg.h"
 #include "Tileset.h"
-#include "Layer.h"
 #include "TileMap.h" 
 
 class CFactory
@@ -29,10 +28,18 @@ public:
 	static CTilesetImg * createTilesetImg(int nSpriteW, int nSpriteH, int nMargin, int nSpacing);
 
 	// Layer
-	static CLayer * createLayer();
+	static CTmxTileLayer * createLayer();
+
+	// Object Layer
+	static CTmxObjectLayer * createObjectLayer();
 
 	// Tile
 	static CTile * createTile(int nIndex);
+
+	// TMX Object
+	static CTmxObject * createObject();
+
+	static CTmxPropertyList *createPropertiesList();
 };
 
 #endif // FACTORY_H
