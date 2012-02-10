@@ -11,11 +11,11 @@ public:
 	~CTile(void);
 
 	//bool getWalkable();
-	int getTileIndex();
+	int getGId();
 
 private:
 	// Index that indicates the sprite (from the palette) to be used when drawing
-	int m_nTileIndex;
+	int m_nGId;
 	// Does it need Width and Height?
 };
 

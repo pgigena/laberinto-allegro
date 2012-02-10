@@ -3,6 +3,9 @@
 
 #include "Util.h"
 #include "TilesetImg.h"
+#include "TmxPropertyList.h"
+
+typedef map<int, CTmxPropertyList*> TilesetProperties;
 
 class CTileset
 {
@@ -42,7 +45,11 @@ private:
 	// Spacing between tiles (Pixels)
 	int m_nSpacing;
 
+	TilesetProperties *m_mTilesetProps;
+
 	CTilesetImg *m_palTilePalette;
+
+	int parseTiles(TiXmlNode *xmlnTileset);
 };
 
 #endif	// TILESET_H

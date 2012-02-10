@@ -4,6 +4,7 @@
 CTileMap::CTileMap()
 {
 	m_bmpMapBuffer = NULL;
+	m_mProperties = NULL;
 }
 
 CTileMap::~CTileMap(void)
@@ -12,7 +13,13 @@ CTileMap::~CTileMap(void)
 	if (m_bmpMapBuffer) {
 		al_destroy_bitmap(m_bmpMapBuffer);
 	}
+
+	if (m_mProperties) {
+		delete m_mProperties;
+	}
+
 	m_vLayers.clear();
+	m_vObjLayers.clear();
 	m_vTilesets.clear();
 }
 
@@ -49,13 +56,65 @@ void CTileMap::paint(ALLEGRO_DISPLAY *display)
 	}
 	al_set_target_bitmap(al_get_backbuffer(display));
 	al_draw_bitmap(m_bmpMapBuffer, 0, 0, 0);
+
+	CTmxObjectLayer *lyrCurrentLayer = NULL;
+	CTileset *tlsCurrentTileset = NULL;
+	CTilesetImg *tliPalette = NULL;
+	ALLEGRO_BITMAP *bmpMesh = NULL;
+	TmxObjectVector *vObjects = NULL;
+	CTmxObject *obj = NULL;
+	int nObjGId;
+
+	for (ObjLayerVector::iterator itObjLayer = m_vObjLayers.begin(); itObjLayer != m_vObjLayers.end(); ++itObjLayer)
+	{
+		lyrCurrentLayer = (*itObjLayer);
+
+		vObjects = lyrCurrentLayer->getLayerObjects();
+		for (TmxObjectVector::iterator itObjects = vObjects->begin(); itObjects != vObjects->end(); ++itObjects)
+		{
+			obj = (*itObjects);
+			nObjGId = obj->getGId();
+
+			if (!nObjGId) {
+				continue;
+			}
+
+			// Iterate backwards through the available tilesets for the map in order to find the one corresponding to the current GId
+			for (TilesetVector::reverse_iterator itTileset = m_vTilesets.rbegin(); itTileset != m_vTilesets.rend(); ++itTileset)
+			{
+				tlsCurrentTileset = (*itTileset);
+
+				// If the GId is within the current tileset, draw it
+				if (nObjGId >= tlsCurrentTileset->getFirstGId()) {
+					tliPalette = tlsCurrentTileset->getTilePalette();
+
+					// TODO: HANDLE EXPLICIT TRANSPARENCY
+					//nTranspColor = tliPalette->getTransparentColor();
+					bmpMesh = tliPalette->getImage();
+					// TODO: IMPLEMENT RESOURCE STACK CORRECTLY
+					//bmpMesh = tliPalette->getImage()->getResource();
+
+					al_draw_bitmap_region(bmpMesh,
+									tlsCurrentTileset->getTileX(nObjGId),
+									tlsCurrentTileset->getTileY(nObjGId),
+									tlsCurrentTileset->getTileW(),
+									tlsCurrentTileset->getTileH(),
+									obj->getPos().x, obj->getPos().y - tlsCurrentTileset->getTileH(), 0);
+
+					// End the loop in order to avoid the object from being overwritten by an empty image
+					break;
+				}
+			}
+		}
+	}
 }
+
 
 void CTileMap::drawBuffer(ALLEGRO_DISPLAY *display)
 {
 	TileCoord tc;
 	TileGrid *tgTiles = NULL;
-	CLayer *lyrCurrentLayer = NULL;
+	CTmxTileLayer *lyrCurrentLayer = NULL;
 	CTileset *tlsCurrentTileset = NULL;
 	CTilesetImg *tliPalette = NULL;
 	ALLEGRO_BITMAP *bmpMesh = NULL;
@@ -90,7 +149,7 @@ void CTileMap::drawBuffer(ALLEGRO_DISPLAY *display)
 					continue;
 				}
 
-				nTileIndex = tgTiles->at(tc)->getTileIndex();
+				nTileIndex = tgTiles->at(tc)->getGId();
 
 				// Iterate backwards through the available tilesets for the map in order to find the one corresponding to the current GId
 				for (TilesetVector::reverse_iterator itTileset = m_vTilesets.rbegin(); itTileset != m_vTilesets.rend(); ++itTileset)
@@ -145,8 +204,10 @@ int CTileMap::parseTmx()
 	m_nTileWidth = atoi(xmleMap->Attribute("tilewidth"));
 	m_nTileHeight = atoi(xmleMap->Attribute("tileheight"));
 
+	parseProperties(xmlnMap);
 	parseTilesets(xmlnMap);
 	parseLayers(xmlnMap);
+	parseObjectLayers(xmlnMap);
 
 	return 0;
 }
@@ -178,13 +239,42 @@ int CTileMap::parseLayers(TiXmlNode *xmlnMap) {
 	return 0;
 }
 
+int CTileMap::parseObjectLayers(TiXmlNode *xmlnMap) {
+	TiXmlNode *xmlnObjLayer = xmlnMap->FirstChild("objectgroup");
+
+	while (xmlnObjLayer) {
+
+		m_vObjLayers.push_back(CFactory::createObjectLayer());
+		m_vObjLayers.back()->parseTmx(xmlnObjLayer);
+
+		xmlnObjLayer = xmlnMap->IterateChildren("objectgroup", xmlnObjLayer);
+	}
+	return 0;
+}
+
+int CTileMap::parseProperties(TiXmlNode *xmlnMap) {
+	// Search for a property list
+	TiXmlNode *xmlnProperties = xmlnMap->FirstChild("properties");
+
+	if (xmlnProperties) {
+		// If the property list has not been created, create it
+		if (!m_mProperties) {
+			m_mProperties = new CTmxPropertyList();
+		}
+
+		// Parse the properties
+		m_mProperties->parseTmx(xmlnProperties);
+	}
+	return 0;
+}
+
 void CTileMap::loadResources()
 {
 	CTileset *tls;
 
-	for (TilesetVector::reverse_iterator itTileset = m_vTilesets.rbegin(); itTileset != m_vTilesets.rend(); ++itTileset)
+	for (TilesetVector::reverse_iterator it = m_vTilesets.rbegin(); it != m_vTilesets.rend(); ++it)
 	{
-		tls = (*itTileset);
+		tls = (*it);
 		tls->loadResources();
 	}
 }

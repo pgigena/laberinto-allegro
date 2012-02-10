@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 	tmMap = CFactory::createTileMap();
 
 	if (!argv[1]) {
-		tmMap->setTmxFile(new TiXmlDocument("test.tmx"));
+		tmMap->setTmxFile(new TiXmlDocument("untitled.tmx"));
 	} else {
 		tmMap->setTmxFile(new TiXmlDocument(argv[1]));
 	}

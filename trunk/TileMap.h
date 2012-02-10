@@ -3,10 +3,13 @@
 
 #include "Util.h"
 #include "Tileset.h"
-#include "Layer.h"
+#include "TmxLayer.h"
+#include "TmxTileLayer.h"
+#include "TmxObjectLayer.h"
 
 typedef vector<CTileset *> TilesetVector;
-typedef vector<CLayer *> LayerVector;
+typedef vector<CTmxTileLayer *> LayerVector;
+typedef vector<CTmxObjectLayer *> ObjLayerVector;
 
 class CTileMap
 {
@@ -46,13 +49,21 @@ private:
 	// Contains the information of each layer 
 	LayerVector m_vLayers;
 
+	// Contains the information of each object layer
+	ObjLayerVector m_vObjLayers;
+
 	// Buffer where the drawn map is kept
 	ALLEGRO_BITMAP *m_bmpMapBuffer;
 
+	// Properties list
+	CTmxPropertyList *m_mProperties;
+
 	int parseTilesets(TiXmlNode *xmlnMap);
 	int parseLayers(TiXmlNode *xmlnMap);
+	int parseObjectLayers(TiXmlNode *xmlnMap);
+	int parseProperties(TiXmlNode *xmlnMap);
 
-	void drawBuffer(ALLEGRO_DISPLAY *disp);
+	void drawBuffer(ALLEGRO_DISPLAY *display);
 };
 
 #endif // TILE_MAP_H
