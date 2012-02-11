@@ -1,5 +1,5 @@
 #include <conio.h>
-
+	
 #include "Util.h"
 #include "Factory.h"
 #include "Character.h"
@@ -17,6 +17,11 @@ ALLEGRO_BITMAP *bmp = NULL;
 void onKeyDown(int nKeycode);
 void onKeyUp(int nKeycode);
 
+void checkCollisions();
+
+CCharacter *player = new CCharacter();
+CCharacter *enemy = NULL;
+
 // Main
 // ----------------------------------------------------------------------------
 int main(int argc, char **argv)
@@ -29,7 +34,8 @@ int main(int argc, char **argv)
 	ALLEGRO_BITMAP *bmpFPSCount = NULL;
 	char szFPSText[15];
 
-	CCharacter *player = new CCharacter();
+	player = new CCharacter();
+	enemy = new CCharacter();
 
 	int nFrames = 0;
 
@@ -107,7 +113,11 @@ int main(int argc, char **argv)
 	al_set_target_bitmap(bmpFPSCount);
 	al_clear_to_color(al_map_rgb(0,0,0));
 	al_set_target_bitmap(al_get_backbuffer(display));
-	player->setPalette(al_load_bitmap("char_test2.png"));
+	player->setPalette(al_load_bitmap("rect1.png"));
+	player->setContainer(20, 30);
+	enemy->setPalette(al_load_bitmap("rect2.png"));
+	enemy->setContainer(20, 30);
+	enemy->setPos(50,50);
 	
 	event_queue = al_create_event_queue();
 	if(!event_queue) {
@@ -171,7 +181,12 @@ int main(int argc, char **argv)
 				player->move(RIGHT);
 			}
 
+			// Check collisions
+			checkCollisions();
+
+			// Draw everything
 			tmMap->paint(display);
+			enemy->draw(display);
 			player->draw(display);
 			al_draw_bitmap(bmpFPSCount, 2, 2, 0);
 			al_draw_text(font, al_map_rgb(255, 0, 255), 2, 1, 0, szFPSText);
@@ -233,5 +248,9 @@ void onKeyUp(int nKeycode) {
 
 void checkCollisions()
 {
-	//player.isColliding();
+	if (player->checkCollision(enemy)) {
+		cout << "Colisiona!" << endl;
+	} else {
+		cout << "No colisiona!" << endl;
+	}
 }

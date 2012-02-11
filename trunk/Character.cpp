@@ -5,7 +5,7 @@ CCharacter::CCharacter(void)
 {
 	m_pos.x = 0;
 	m_pos.y = 0;
-	m_nSpeed = 3;
+	m_nSpeed = 8;
 }
 
 
@@ -26,15 +26,31 @@ void CCharacter::setPalette(ALLEGRO_BITMAP *bmp)
 
 void CCharacter::move(Direction d)
 {
-	if (d == UP)
+	m_previousPos = m_pos;
+	if (d == UP) {
 		m_pos.y -= m_nSpeed;
+	}
 
-	if (d == DOWN)
+	if (d == DOWN) {
 		m_pos.y += m_nSpeed;
+	}
 
-	if (d == LEFT)
+	if (d == LEFT) {
 		m_pos.x -= m_nSpeed;
+	}
 
-	if (d == RIGHT)
+	if (d == RIGHT) {
 		m_pos.x += m_nSpeed;
+	}
+}
+
+bool CCharacter::checkCollision(CCollidable *c)
+{
+	bool bIsColliding = isColliding(c);
+
+	if (bIsColliding) {
+		m_pos = m_previousPos;
+	}
+
+	return bIsColliding;
 }

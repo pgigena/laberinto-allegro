@@ -5,7 +5,6 @@ CCollidable::CCollidable(void)
 {
 }
 
-
 CCollidable::~CCollidable(void)
 {
 }
@@ -18,6 +17,28 @@ Point CCollidable::getPos()
 Rect CCollidable::getContainer()
 {
 	return m_container;
+}
+
+void CCollidable::setPos(Point pos)
+{
+	m_pos = pos;
+}
+
+void CCollidable::setPos(int x, int y)
+{
+	m_pos.x = x;
+	m_pos.y = y;
+}
+
+void CCollidable::setContainer(Rect container)
+{
+	m_container = container;
+}
+
+void CCollidable::setContainer(int w, int h)
+{
+	m_container.w = w;
+	m_container.h = h;
 }
 
 bool CCollidable::isColliding(CCollidable *c)

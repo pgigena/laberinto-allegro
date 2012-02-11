@@ -12,8 +12,13 @@ public:
 	Point getPos();
 	Rect getContainer();
 
-	bool isColliding(CCollidable *c);
-	bool isColliding(Point p, Rect r);
+	void setPos(Point pos);
+	void setPos(int x, int y);
+	void setContainer(Rect container);
+	void setContainer(int w, int h);
+
+	virtual bool isColliding(CCollidable *c);
+	virtual bool isColliding(Point p, Rect r);
 
 protected:
 	Point m_pos;
