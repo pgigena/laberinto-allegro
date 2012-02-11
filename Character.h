@@ -16,9 +16,12 @@ public:
 
 	void setPalette(ALLEGRO_BITMAP *bmp);
 
+	bool checkCollision(CCollidable *c);
+
 protected:
 	ALLEGRO_BITMAP *m_bmpPalette;
 	int m_nSpeed;
+	Point m_previousPos;
 };
 
 #endif	// CHARACTER_H

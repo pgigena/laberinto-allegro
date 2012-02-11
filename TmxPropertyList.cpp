@@ -39,7 +39,7 @@ int CTmxPropertyList::parseProperty(TiXmlNode *xmlnProperty)
 	sValue = xmleProperty->Attribute("value");
 
 	m_properties[sName] = sValue;
-	cout << sName << "=" << sValue << endl << "____________" << endl;
+//	cout << sName << "=" << sValue << endl << "____________" << endl;
 
 	return 0;
 }
