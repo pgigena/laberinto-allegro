@@ -16,7 +16,7 @@ using namespace std;
 
 #include "TinyXML\tinyxml.h"
 
-enum Direction { UP, DOWN, LEFT, RIGHT };
+enum Direction { UP = 1, DOWN = 2, LEFT = 4, RIGHT = 8 };
 
 typedef struct TileCoord
 {
@@ -44,6 +44,8 @@ typedef struct Point
 
 typedef struct Rect
 {
+	int x;
+	int y;
 	int w;
 	int h;
 } Rect;

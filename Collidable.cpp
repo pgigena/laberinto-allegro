@@ -11,7 +11,11 @@ CCollidable::~CCollidable(void)
 
 Point CCollidable::getPos()
 {
-	return m_pos;
+	Point pos;
+	pos.x = m_container.x;
+	pos.y = m_container.y;
+
+	return pos;
 }
 
 Rect CCollidable::getContainer()
@@ -21,13 +25,14 @@ Rect CCollidable::getContainer()
 
 void CCollidable::setPos(Point pos)
 {
-	m_pos = pos;
+	m_container.x = pos.x;
+	m_container.y = pos.y;
 }
 
 void CCollidable::setPos(int x, int y)
 {
-	m_pos.x = x;
-	m_pos.y = y;
+	m_container.x = x;
+	m_container.y = y;
 }
 
 void CCollidable::setContainer(Rect container)
@@ -35,26 +40,33 @@ void CCollidable::setContainer(Rect container)
 	m_container = container;
 }
 
-void CCollidable::setContainer(int w, int h)
+void CCollidable::setContainer(Point pos, int w, int h)
 {
+	setContainer(pos.x, pos.y, w, h);
+}
+
+void CCollidable::setContainer(int x, int y, int w, int h)
+{
+	m_container.x = x;
+	m_container.y = y;
 	m_container.w = w;
 	m_container.h = h;
 }
 
 bool CCollidable::isColliding(CCollidable *c)
 {
-	return isColliding(c->getPos(), c->getContainer());
+	return isColliding(c->getContainer());
 }
 
-bool CCollidable::isColliding(Point p, Rect r)
+bool CCollidable::isColliding(Rect r)
 {
-	if(m_pos.y + m_container.h < p.y)
+	if(m_container.y + m_container.h < r.y)
 		return false;
-	if(m_pos.y > p.y + r.h)
+	if(m_container.y > r.y + r.h)
 		return false;
-	if(m_pos.x + m_container.w < p.x)
+	if(m_container.x + m_container.w < r.x)
 		return false;
-	if(m_pos.x > p.x + r.w)	
+	if(m_container.x > r.x + r.w)
 		return false;
 
 	return true;
