@@ -12,7 +12,7 @@ public:
 	~CCharacter(void);
 
 	void draw(ALLEGRO_DISPLAY *disp);
-	void move(Direction d);
+	void move(int directions);
 
 	void setPalette(ALLEGRO_BITMAP *bmp);
 

@@ -15,13 +15,13 @@ public:
 	void setPos(Point pos);
 	void setPos(int x, int y);
 	void setContainer(Rect container);
-	void setContainer(int w, int h);
+	void setContainer(Point pos, int w, int h);
+	void setContainer(int x, int y, int w, int h);
 
 	virtual bool isColliding(CCollidable *c);
-	virtual bool isColliding(Point p, Rect r);
+	virtual bool isColliding(Rect r);
 
 protected:
-	Point m_pos;
 	Rect m_container;
 };
 

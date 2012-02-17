@@ -22,6 +22,8 @@ void checkCollisions();
 CCharacter *player = new CCharacter();
 CCharacter *enemy = NULL;
 
+short nMoveDirection = 0;
+
 // Main
 // ----------------------------------------------------------------------------
 int main(int argc, char **argv)
@@ -114,10 +116,9 @@ int main(int argc, char **argv)
 	al_clear_to_color(al_map_rgb(0,0,0));
 	al_set_target_bitmap(al_get_backbuffer(display));
 	player->setPalette(al_load_bitmap("rect1.png"));
-	player->setContainer(20, 30);
+	player->setContainer(0, 0, 20, 30);
 	enemy->setPalette(al_load_bitmap("rect2.png"));
-	enemy->setContainer(20, 30);
-	enemy->setPos(50,50);
+	enemy->setContainer(50, 50, 20, 30);
 	
 	event_queue = al_create_event_queue();
 	if(!event_queue) {
@@ -168,19 +169,7 @@ int main(int argc, char **argv)
 		if(bRedraw && al_is_event_queue_empty(event_queue)) {
 			bRedraw = false;
 
-			if (bKeys[UP]) {
-				player->move(UP);
-			}
-			if (bKeys[DOWN]) {
-				player->move(DOWN);
-			}
-			if (bKeys[LEFT]) {
-				player->move(LEFT);
-			}
-			if (bKeys[RIGHT]) {
-				player->move(RIGHT);
-			}
-
+			player->move(nMoveDirection);
 			// Check collisions
 			checkCollisions();
 
@@ -209,15 +198,19 @@ void onKeyDown(int nKeycode) {
 	{
 		case ALLEGRO_KEY_UP:
 			bKeys[UP] = true;
+			nMoveDirection |= UP;
 			break;
 		case ALLEGRO_KEY_DOWN:
 			bKeys[DOWN] = true;
+			nMoveDirection |= DOWN;
 			break;
 		case ALLEGRO_KEY_LEFT:
 			bKeys[LEFT] = true;
+			nMoveDirection |= LEFT;
 			break;
 		case ALLEGRO_KEY_RIGHT:
 			bKeys[RIGHT] = true;
+			nMoveDirection |= RIGHT;
 			break;
 	}
 }
@@ -233,15 +226,19 @@ void onKeyUp(int nKeycode) {
 			break;
 		case ALLEGRO_KEY_UP:
 			bKeys[UP] = false;
+			nMoveDirection ^= UP;
 			break;
 		case ALLEGRO_KEY_DOWN:
 			bKeys[DOWN] = false;
+			nMoveDirection ^= DOWN;
 			break;
 		case ALLEGRO_KEY_LEFT:
 			bKeys[LEFT] = false;
+			nMoveDirection ^= LEFT;
 			break;
 		case ALLEGRO_KEY_RIGHT:
 			bKeys[RIGHT] = false;
+			nMoveDirection ^= RIGHT;
 			break;
 	}
 }
